@@ -297,33 +297,33 @@ button.border-transparent,
 /* Pop art style shadow - sharp, no blur */
 @layer utilities {
     .shadow-pop-art {
-        box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
+        box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
         transition: box-shadow 0.15s ease-in-out, transform 0.15s ease-in-out;
     }
 
     .dark .shadow-pop-art {
-        box-shadow: 6px 6px 0px 0px rgba(255, 255, 255, 0.9);
+        box-shadow: 4px 4px 0px 0px rgba(255, 255, 255, 0.9);
         transition: box-shadow 0.15s ease-in-out, transform 0.15s ease-in-out;
     }
 
     /* Larger shadow for cards */
     .shadow-pop-art-card {
-        box-shadow: 12px 12px 0px 0px rgba(0, 0, 0, 1);
+        box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
         transition: box-shadow 0.15s ease-in-out;
     }
 
     .dark .shadow-pop-art-card {
-        box-shadow: 12px 12px 0px 0px rgba(255, 255, 255, 0.9);
+        box-shadow: 8px 8px 0px 0px rgba(255, 255, 255, 0.9);
         transition: box-shadow 0.15s ease-in-out;
     }
 
     /* Hover states for cards */
     .shadow-pop-art-card:hover {
-        box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+        box-shadow: 12px 12px 0px 0px rgba(0, 0, 0, 1);
     }
 
     .dark .shadow-pop-art-card:hover {
-        box-shadow: 8px 8px 0px 0px rgba(255, 255, 255, 0.9);
+        box-shadow: 12px 12px 0px 0px rgba(255, 255, 255, 0.9);
     }
 
     .shadow-pop-art-hover {
@@ -344,11 +344,11 @@ button.border-transparent,
 
     /* Hover states for buttons */
     .shadow-pop-art:hover {
-        box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+        box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
     }
 
     .dark .shadow-pop-art:hover {
-        box-shadow: 4px 4px 0px 0px rgba(255, 255, 255, 0.9);
+        box-shadow: 6px 6px 0px 0px rgba(255, 255, 255, 0.9);
     }
 
     /* Active states for buttons - synchronized with button movement */
