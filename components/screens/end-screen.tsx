@@ -39,16 +39,17 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                             Training Sliders
                         </h3>
                         <p className="text-sm text-muted-foreground">
-                            Your six training sliders were the{" "}
+                            Your seven training sliders were the{" "}
                             <strong>inputs</strong> to the perceptron:
                         </p>
                         <ul className="text-sm text-muted-foreground space-y-1">
+                            <li>💪 Conditioning</li>
                             <li>🥊 Striking</li>
-                            <li>🤼 Grappling</li>
-                            <li>❤️ Cardio</li>
-                            <li>👣 Footwork</li>
-                            <li>🧠 Mindset</li>
-                            <li>😴 Sleep</li>
+                            <li>🤼 Wrestling</li>
+                            <li>🥋 BJJ</li>
+                            <li>🥊 Muay Thai</li>
+                            <li>🧠 Tactical</li>
+                            <li>😴 Recovery</li>
                         </ul>
                     </Card>
 

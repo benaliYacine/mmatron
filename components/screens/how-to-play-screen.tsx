@@ -53,8 +53,7 @@ export function HowToPlayScreen({ onContinue, onBack }: HowToPlayScreenProps) {
                             2. Set Training
                         </h3>
                         <p className="text-muted-foreground">
-                            Adjust sliders: 🥊 Striking, 🤼 Grappling, ❤️
-                            Cardio, 👣 Footwork, 🧠 Mindset, 😴 Sleep
+                            Adjust sliders: 💪 Conditioning, 🥊 Striking, 🤼 Wrestling, 🥋 BJJ, 🥊 Muay Thai, 🧠 Tactical, 😴 Recovery
                         </p>
                     </div>
 

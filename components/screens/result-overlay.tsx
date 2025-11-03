@@ -87,6 +87,17 @@ export function ResultOverlay({
 
 // Fight Animation Component
 function FightAnimation() {
+    const [shouldPlayAnimation, setShouldPlayAnimation] = useState(false);
+
+    useEffect(() => {
+        // Small delay to ensure container is at full size
+        const timer = setTimeout(() => {
+            setShouldPlayAnimation(true);
+        }, 100);
+
+        return () => clearTimeout(timer);
+    }, []);
+
     return (
         <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -95,12 +106,16 @@ function FightAnimation() {
             transition={{ duration: 0.3 }}
             className="flex items-center justify-center"
         >
-            <LottieAnimation
-                src="https://lottie.host/06bd0830-7c2c-4ed0-ba51-55bc0ea5ce15/yYl8cRqWlT.lottie"
-                className="w-64 h-64"
-                loop={false}
-                autoplay={true}
-            />
+            <div className="w-64 h-64">
+                {shouldPlayAnimation && (
+                    <LottieAnimation
+                        src="https://lottie.host/06bd0830-7c2c-4ed0-ba51-55bc0ea5ce15/yYl8cRqWlT.lottie"
+                        className="w-64 h-64"
+                        loop={false}
+                        autoplay={true}
+                    />
+                )}
+            </div>
         </motion.div>
     );
 }
@@ -122,22 +137,35 @@ function WinOverlay({
     hasNextOpponent,
     allOpponentsBeaten,
 }: WinOverlayProps) {
+    const [shouldPlayAnimations, setShouldPlayAnimations] = useState(false);
+
     // Use long firework for the final boss, short for others
     const fireworkSrc = allOpponentsBeaten
         ? "https://lottie.host/60e70a4f-9c77-4cdb-88da-5469aaa078cd/PL54NuzKx4.lottie" // 10s long
         : "https://lottie.host/3380a954-832b-4928-bf80-3a91b44a409b/Kvku3jdYfS.lottie"; // 1s short
 
+    // Delay animations until after card scale animation completes
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShouldPlayAnimations(true);
+        }, 300); // Wait for card animation (300ms) + buffer
+
+        return () => clearTimeout(timer);
+    }, []);
+
     return (
         <>
             {/* Fireworks - Full screen behind everything */}
-            <div className="fixed inset-0 pointer-events-none z-0">
-                <LottieAnimation
-                    src={fireworkSrc}
-                    className="w-full h-full"
-                    loop={allOpponentsBeaten}
-                    autoplay={true}
-                />
-            </div>
+            {shouldPlayAnimations && (
+                <div className="absolute inset-0 pointer-events-none z-20">
+                    <LottieAnimation
+                        src={fireworkSrc}
+                        className="w-full h-full"
+                        loop={allOpponentsBeaten}
+                        autoplay={true}
+                    />
+                </div>
+            )}
 
             {/* Win Card */}
             <motion.div
@@ -148,20 +176,17 @@ function WinOverlay({
                 className="relative z-10"
             >
                 <Card className="p-12 flex flex-col items-center gap-6 border-primary shadow-lg max-w-md bg-background/95">
-                    {/* Win Crown Animation */}
-                    <motion.div
-                        className="relative"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ duration: 0.6, type: "spring" }}
-                    >
-                        <LottieAnimation
-                            src="https://lottie.host/6057d8f0-6745-4224-8511-65c899cba353/hTIvvxT3Xc.lottie"
-                            className="w-48 h-48"
-                            loop={false}
-                            autoplay={true}
-                        />
-                    </motion.div>
+                    {/* Win Crown Animation - Fixed size container */}
+                    <div className="relative w-48 h-48">
+                        {shouldPlayAnimations && (
+                            <LottieAnimation
+                                src="https://lottie.host/6057d8f0-6745-4224-8511-65c899cba353/hTIvvxT3Xc.lottie"
+                                className="w-48 h-48"
+                                loop={false}
+                                autoplay={true}
+                            />
+                        )}
+                    </div>
 
                     <div className="text-center space-y-2">
                         <motion.h2
@@ -248,6 +273,17 @@ function LossOverlay({
     onBackToPath,
     hasNextOpponent,
 }: LossOverlayProps) {
+    const [shouldPlayAnimation, setShouldPlayAnimation] = useState(false);
+
+    // Delay animation until after card scale animation completes
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShouldPlayAnimation(true);
+        }, 400); // Wait for card animation (300ms) + buffer
+
+        return () => clearTimeout(timer);
+    }, []);
+
     return (
         <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -256,20 +292,17 @@ function LossOverlay({
             transition={{ duration: 0.3 }}
         >
             <Card className="p-12 flex flex-col items-center gap-6 max-w-md">
-                {/* Loss Animation */}
-                <motion.div
-                    className="relative"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.4 }}
-                >
-                    <LottieAnimation
-                        src="https://lottie.host/d4b105e8-d03f-4632-af7d-b75dc31df0cb/M6C2pjdcoE.lottie"
-                        className="w-48 h-48"
-                        loop={false}
-                        autoplay={true}
-                    />
-                </motion.div>
+                {/* Loss Animation - Fixed size container */}
+                <div className="relative w-48 h-48">
+                    {shouldPlayAnimation && (
+                        <LottieAnimation
+                            src="https://lottie.host/d4b105e8-d03f-4632-af7d-b75dc31df0cb/M6C2pjdcoE.lottie"
+                            className="w-48 h-48"
+                            loop={false}
+                            autoplay={true}
+                        />
+                    )}
+                </div>
 
                 <div className="text-center space-y-2">
                     <h2 className="text-5xl font-bold text-foreground">LOSS</h2>
@@ -292,21 +325,18 @@ function LossOverlay({
                                     💡 Coach&apos;s Advice
                                 </Badge>
                             </div>
-                            {advice.map((tip, idx) => (
-                                <motion.p
-                                    key={idx}
-                                    className="text-sm text-foreground"
-                                    initial={{ x: -20, opacity: 0 }}
-                                    animate={{ x: 0, opacity: 1 }}
-                                    transition={{ delay: idx * 0.1 }}
-                                    dangerouslySetInnerHTML={{
-                                        __html: tip.message.replace(
-                                            /\*\*(.*?)\*\*/g,
-                                            '<strong class="text-primary">$1</strong>'
-                                        ),
-                                    }}
-                                />
-                            ))}
+                            <motion.p
+                                className="text-sm text-foreground"
+                                initial={{ x: -20, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ duration: 0.3 }}
+                                dangerouslySetInnerHTML={{
+                                    __html: advice[0].message.replace(
+                                        /\*\*(.*?)\*\*/g,
+                                        '<strong class="text-primary font-bold" style="-webkit-text-stroke: 0.5px black; ">$1</strong>'
+                                    ),
+                                }}
+                            />
                         </motion.div>
                     )}
                 </AnimatePresence>

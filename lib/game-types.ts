@@ -1,20 +1,22 @@
 // Training stat types
 export type TrainingStat =
+  | "conditioning"
   | "striking"
-  | "grappling"
-  | "cardio"
-  | "footwork"
-  | "mindset"
-  | "sleep";
+  | "wrestling"
+  | "bjj"
+  | "muay_thai"
+  | "tactical"
+  | "recovery";
 
 // All training stats array
 export const TRAINING_STATS: TrainingStat[] = [
+  "conditioning",
   "striking",
-  "grappling",
-  "cardio",
-  "footwork",
-  "mindset",
-  "sleep",
+  "wrestling",
+  "bjj",
+  "muay_thai",
+  "tactical",
+  "recovery",
 ];
 
 // Stat display info
@@ -22,12 +24,13 @@ export const STAT_INFO: Record<
   TrainingStat,
   { emoji: string; label: string }
 > = {
+  conditioning: { emoji: "💪", label: "Conditioning" },
   striking: { emoji: "🥊", label: "Striking" },
-  grappling: { emoji: "🤼", label: "Grappling" },
-  cardio: { emoji: "❤️", label: "Cardio" },
-  footwork: { emoji: "👣", label: "Footwork" },
-  mindset: { emoji: "🧠", label: "Mindset" },
-  sleep: { emoji: "😴", label: "Sleep" },
+  wrestling: { emoji: "🤼", label: "Wrestling" },
+  bjj: { emoji: "🥋", label: "BJJ" },
+  muay_thai: { emoji: "🥊", label: "Muay Thai" },
+  tactical: { emoji: "🧠", label: "Tactical" },
+  recovery: { emoji: "😴", label: "Recovery" },
 };
 
 // Slider state (0-10 for each stat)
@@ -98,12 +101,13 @@ export interface AdviceTip {
 
 // Default values
 export const DEFAULT_SLIDER_STATE: SliderState = {
+  conditioning: 0,
   striking: 0,
-  grappling: 0,
-  cardio: 0,
-  footwork: 0,
-  mindset: 0,
-  sleep: 0,
+  wrestling: 0,
+  bjj: 0,
+  muay_thai: 0,
+  tactical: 0,
+  recovery: 0,
 };
 
 export const INITIAL_GAME_STATE: GameState = {
