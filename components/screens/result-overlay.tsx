@@ -8,6 +8,7 @@ import { generateAdvice } from "@/lib/game-logic";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, CloudRain } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie-animation";
 
 interface ResultOverlayProps {
     result: FightResult;
@@ -35,20 +36,32 @@ export function ResultOverlay({
     allOpponentsBeaten,
 }: ResultOverlayProps) {
     const [showAdvice, setShowAdvice] = useState(false);
+    const [showFightAnimation, setShowFightAnimation] = useState(true);
     const advice = !result.won ? generateAdvice(result, sliders, opponent) : [];
 
     useEffect(() => {
+        // Show fight animation for 1 second
+        const fightTimer = setTimeout(() => setShowFightAnimation(false), 1000);
+
         if (!result.won) {
-            const timer = setTimeout(() => setShowAdvice(true), 1000);
-            return () => clearTimeout(timer);
+            const adviceTimer = setTimeout(() => setShowAdvice(true), 2000);
+            return () => {
+                clearTimeout(fightTimer);
+                clearTimeout(adviceTimer);
+            };
         }
+
+        return () => clearTimeout(fightTimer);
     }, [result.won]);
 
     return (
         <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <AnimatePresence mode="wait">
-                {result.won ? (
+                {showFightAnimation ? (
+                    <FightAnimation key="fight" />
+                ) : result.won ? (
                     <WinOverlay
+                        key="win"
                         onTryAgain={onTryAgain}
                         onNextOpponent={onNextOpponent}
                         onBackToPath={onBackToPath}
@@ -58,6 +71,7 @@ export function ResultOverlay({
                     />
                 ) : (
                     <LossOverlay
+                        key="loss"
                         advice={advice}
                         showAdvice={showAdvice}
                         onTweakTraining={onTweakTraining}
@@ -68,6 +82,26 @@ export function ResultOverlay({
                 )}
             </AnimatePresence>
         </div>
+    );
+}
+
+// Fight Animation Component
+function FightAnimation() {
+    return (
+        <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 1.2, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="flex items-center justify-center"
+        >
+            <LottieAnimation
+                src="https://lottie.host/06bd0830-7c2c-4ed0-ba51-55bc0ea5ce15/yYl8cRqWlT.lottie"
+                className="w-64 h-64"
+                loop={false}
+                autoplay={true}
+            />
+        </motion.div>
     );
 }
 
@@ -88,102 +122,112 @@ function WinOverlay({
     hasNextOpponent,
     allOpponentsBeaten,
 }: WinOverlayProps) {
+    // Use long firework for the final boss, short for others
+    const fireworkSrc = allOpponentsBeaten
+        ? "https://lottie.host/60e70a4f-9c77-4cdb-88da-5469aaa078cd/PL54NuzKx4.lottie" // 10s long
+        : "https://lottie.host/3380a954-832b-4928-bf80-3a91b44a409b/Kvku3jdYfS.lottie"; // 1s short
+
     return (
-        <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ duration: 0.3, type: "spring" }}
-        >
-            <Card className="p-12 flex flex-col items-center gap-6 border-primary shadow-lg max-w-md">
-                {/* Confetti Animation */}
-                <motion.div
-                    className="relative"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1, rotate: 360 }}
-                    transition={{ duration: 0.6, type: "spring" }}
-                >
-                    <div className="text-8xl">🏆</div>
+        <>
+            {/* Fireworks - Full screen behind everything */}
+            <div className="fixed inset-0 pointer-events-none z-0">
+                <LottieAnimation
+                    src={fireworkSrc}
+                    className="w-full h-full"
+                    loop={allOpponentsBeaten}
+                    autoplay={true}
+                />
+            </div>
+
+            {/* Win Card */}
+            <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.3, type: "spring" }}
+                className="relative z-10"
+            >
+                <Card className="p-12 flex flex-col items-center gap-6 border-primary shadow-lg max-w-md bg-background/95">
+                    {/* Win Crown Animation */}
                     <motion.div
-                        className="absolute inset-0"
-                        animate={{
-                            scale: [1, 1.2, 1],
-                            opacity: [1, 0.5, 1],
-                        }}
-                        transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                        }}
+                        className="relative"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.6, type: "spring" }}
                     >
-                        <Sparkles className="h-16 w-16 text-primary absolute -top-4 -right-4" />
+                        <LottieAnimation
+                            src="https://lottie.host/6057d8f0-6745-4224-8511-65c899cba353/hTIvvxT3Xc.lottie"
+                            className="w-48 h-48"
+                            loop={false}
+                            autoplay={true}
+                        />
                     </motion.div>
-                </motion.div>
 
-                <div className="text-center space-y-2">
-                    <motion.h2
-                        className="text-5xl font-bold text-foreground"
-                        initial={{ y: -20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.2 }}
-                    >
-                        WIN!
-                    </motion.h2>
-                    <motion.p
-                        className="text-lg text-muted-foreground"
-                        initial={{ y: -20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                    >
-                        {allOpponentsBeaten
-                            ? "You defeated the final boss! 🎉"
-                            : "Excellent training strategy!"}
-                    </motion.p>
-                </div>
+                    <div className="text-center space-y-2">
+                        <motion.h2
+                            className="text-5xl font-bold text-foreground"
+                            initial={{ y: -20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                        >
+                            WIN!
+                        </motion.h2>
+                        <motion.p
+                            className="text-lg text-muted-foreground"
+                            initial={{ y: -20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.3 }}
+                        >
+                            {allOpponentsBeaten
+                                ? "You defeated the final boss! 🎉"
+                                : "Excellent training strategy!"}
+                        </motion.p>
+                    </div>
 
-                <motion.div
-                    className="flex flex-col gap-3 w-full"
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                >
-                    {hasNextOpponent && (
+                    <motion.div
+                        className="flex flex-col gap-3 w-full"
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                    >
+                        {hasNextOpponent && (
+                            <Button
+                                size="lg"
+                                onClick={onNextOpponent}
+                                className="w-full"
+                            >
+                                Next Opponent →
+                            </Button>
+                        )}
+                        {allOpponentsBeaten && (
+                            <Button
+                                size="lg"
+                                onClick={onEndScreen}
+                                className="w-full"
+                            >
+                                📚 See What You Learned
+                            </Button>
+                        )}
                         <Button
                             size="lg"
-                            onClick={onNextOpponent}
+                            variant="outline"
+                            onClick={onTryAgain}
                             className="w-full"
                         >
-                            Next Opponent →
+                            Replay This Fight
                         </Button>
-                    )}
-                    {allOpponentsBeaten && (
                         <Button
-                            size="lg"
-                            onClick={onEndScreen}
+                            size="sm"
+                            variant="ghost"
+                            onClick={onBackToPath}
                             className="w-full"
                         >
-                            📚 See What You Learned
+                            Back to Path
                         </Button>
-                    )}
-                    <Button
-                        size="lg"
-                        variant="outline"
-                        onClick={onTryAgain}
-                        className="w-full"
-                    >
-                        Replay This Fight
-                    </Button>
-                    <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={onBackToPath}
-                        className="w-full"
-                    >
-                        Back to Path
-                    </Button>
-                </motion.div>
-            </Card>
-        </motion.div>
+                    </motion.div>
+                </Card>
+            </motion.div>
+        </>
     );
 }
 
@@ -215,22 +259,16 @@ function LossOverlay({
                 {/* Loss Animation */}
                 <motion.div
                     className="relative"
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
                     transition={{ duration: 0.4 }}
                 >
-                    <div className="text-8xl">💨</div>
-                    <motion.div
-                        animate={{
-                            x: [-5, 5, -5],
-                        }}
-                        transition={{
-                            duration: 0.3,
-                            repeat: 2,
-                        }}
-                    >
-                        <CloudRain className="h-12 w-12 text-muted-foreground absolute -top-2 -right-2 opacity-50" />
-                    </motion.div>
+                    <LottieAnimation
+                        src="https://lottie.host/d4b105e8-d03f-4632-af7d-b75dc31df0cb/M6C2pjdcoE.lottie"
+                        className="w-48 h-48"
+                        loop={false}
+                        autoplay={true}
+                    />
                 </motion.div>
 
                 <div className="text-center space-y-2">
