@@ -190,7 +190,7 @@ function OpponentBubble({
 
     return (
         <Card
-            className="p-6 flex flex-col items-center gap-3 hover:border-primary transition-colors cursor-pointer relative"
+            className="p-6 flex flex-col items-center gap-3 cursor-pointer relative"
             onClick={() => onSelect(opponent.id)}
         >
             {isBeaten && (

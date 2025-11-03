@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Bangers, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 const bangers = Bangers({
     subsets: ["latin"],
@@ -39,7 +38,6 @@ export default function RootLayout({
                     disableTransitionOnChange
                 >
                     {children}
-                    <ThemeToggle />
                 </ThemeProvider>
             </body>
         </html>

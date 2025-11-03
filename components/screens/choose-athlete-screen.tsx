@@ -51,7 +51,7 @@ function AthleteCard({ athlete, onSelect }: AthleteCardProps) {
     const maxWeight = Math.max(...Object.values(athlete.weights));
 
     return (
-        <Card className="p-6 flex flex-col gap-4 hover:border-primary transition-colors">
+        <Card className="p-6 flex flex-col gap-4">
             <div className="flex items-center justify-between">
                 <div>
                     <h3 className="text-2xl font-bold text-foreground">
