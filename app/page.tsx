@@ -85,13 +85,46 @@ function GameContent() {
         window.location.reload();
     };
 
+    const handleHowToPlay = () => {
+        setScreen("how-to-play");
+    };
+
+    const handleChangeAthlete = () => {
+        // Reset athlete selection but keep progress
+        selectAthlete("");
+        setScreen("choose-athlete");
+    };
+
+    const handleBackFromHowToPlay = () => {
+        // If we have an athlete selected, go back to opponent path
+        // Otherwise, go to choose athlete
+        if (gameState.selectedAthleteId) {
+            setScreen("opponent-path");
+        } else {
+            setScreen("choose-athlete");
+        }
+    };
+
     // Render current screen
     if (gameState.currentScreen === "landing") {
         return <LandingScreen onStart={handleStart} />;
     }
 
     if (gameState.currentScreen === "how-to-play") {
-        return <HowToPlayScreen onContinue={handleHowToPlayContinue} />;
+        return (
+            <HowToPlayScreen
+                onContinue={
+                    gameState.selectedAthleteId
+                        ? handleBackFromHowToPlay
+                        : handleHowToPlayContinue
+                }
+                onBack={
+                    gameState.selectedAthleteId
+                        ? handleBackFromHowToPlay
+                        : undefined
+                }
+            />
+        );
     }
 
     if (gameState.currentScreen === "choose-athlete") {
@@ -111,6 +144,9 @@ function GameContent() {
                 beatenOpponents={gameState.beatenOpponents}
                 onSelectOpponent={handleOpponentSelect}
                 onEndScreen={handleEndScreen}
+                onHowToPlay={handleHowToPlay}
+                onChangeAthlete={handleChangeAthlete}
+                onRestart={handleRestart}
             />
         );
     }
@@ -129,6 +165,9 @@ function GameContent() {
             );
         }
 
+        const currentId = gameState.currentOpponentId || 1;
+        const hasNextOpponent = currentId < GAME_CONFIG.opponents.length;
+
         return (
             <TrainingRoomScreen
                 athlete={athlete}
@@ -139,6 +178,8 @@ function GameContent() {
                 onFight={handleFight}
                 onReset={resetSliders}
                 onBackToPath={handleBackToPath}
+                onNextOpponent={handleNextOpponent}
+                hasNextOpponent={hasNextOpponent}
             />
         );
     }
@@ -169,6 +210,8 @@ function GameContent() {
                             onFight={handleFight}
                             onReset={resetSliders}
                             onBackToPath={handleBackToPath}
+                            onNextOpponent={handleNextOpponent}
+                            hasNextOpponent={hasNextOpponent}
                         />
                     );
                 })()}
@@ -197,7 +240,12 @@ function GameContent() {
     }
 
     if (gameState.currentScreen === "end-screen") {
-        return <EndScreen onRestart={handleRestart} />;
+        return (
+            <EndScreen
+                onRestart={handleRestart}
+                onBackToPath={handleBackToPath}
+            />
+        );
     }
 
     return null;

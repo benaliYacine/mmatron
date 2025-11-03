@@ -11,6 +11,17 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface OpponentPathScreenProps {
     opponents: Opponent[];
@@ -18,6 +29,9 @@ interface OpponentPathScreenProps {
     beatenOpponents: number[];
     onSelectOpponent: (opponentId: number) => void;
     onEndScreen: () => void;
+    onHowToPlay: () => void;
+    onChangeAthlete: () => void;
+    onRestart: () => void;
 }
 
 export function OpponentPathScreen({
@@ -26,6 +40,9 @@ export function OpponentPathScreen({
     beatenOpponents,
     onSelectOpponent,
     onEndScreen,
+    onHowToPlay,
+    onChangeAthlete,
+    onRestart,
 }: OpponentPathScreenProps) {
     const allBeaten = opponents.every((opp) =>
         beatenOpponents.includes(opp.id)
@@ -41,6 +58,45 @@ export function OpponentPathScreen({
                     <p className="text-muted-foreground">
                         Choose your next challenge
                     </p>
+                </div>
+
+                {/* Action Buttons Row */}
+                <div className="flex flex-wrap justify-center gap-3 w-full">
+                    <Button variant="outline" size="sm" onClick={onHowToPlay}>
+                        📖 How to Play
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={onChangeAthlete}
+                    >
+                        🔄 Change Athlete
+                    </Button>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="outline" size="sm">
+                                🔁 Restart Game
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                    Restart Game?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This will reset all your progress, including
+                                    unlocked opponents and victories. Are you
+                                    sure you want to restart?
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={onRestart}>
+                                    Restart
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full">

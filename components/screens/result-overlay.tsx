@@ -60,7 +60,6 @@ export function ResultOverlay({
                     <LossOverlay
                         advice={advice}
                         showAdvice={showAdvice}
-                        onTryAgain={onTryAgain}
                         onTweakTraining={onTweakTraining}
                         onNextOpponent={onNextOpponent}
                         onBackToPath={onBackToPath}
@@ -191,7 +190,6 @@ function WinOverlay({
 interface LossOverlayProps {
     advice: Array<{ message: string; priority: number }>;
     showAdvice: boolean;
-    onTryAgain: () => void;
     onTweakTraining: () => void;
     onNextOpponent: () => void;
     onBackToPath: () => void;
@@ -201,7 +199,6 @@ interface LossOverlayProps {
 function LossOverlay({
     advice,
     showAdvice,
-    onTryAgain,
     onTweakTraining,
     onNextOpponent,
     onBackToPath,
@@ -283,14 +280,6 @@ function LossOverlay({
                         className="w-full"
                     >
                         Tweak Training
-                    </Button>
-                    <Button
-                        size="lg"
-                        variant="outline"
-                        onClick={onTryAgain}
-                        className="w-full"
-                    >
-                        Try Again
                     </Button>
                     <Button
                         size="sm"
