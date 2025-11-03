@@ -10,8 +10,7 @@ import {
 
 /**
  * Calculate effective weights based on opponent stats
- * High opponent stat → need to counter → effective weight stays high
- * Low opponent stat → can exploit → effective weight lower
+ * Uses average of athlete weight and opponent stat: (athlete_w + opp_stat) / 2
  */
 export function calculateEffectiveWeights(
     athleteWeights: Record<TrainingStat, number>,
@@ -21,14 +20,12 @@ export function calculateEffectiveWeights(
 
     for (const stat of TRAINING_STATS) {
         // Recovery is personal/self-improvement, not affected by opponent
-        // Other stats use: athlete weight - opponent stat (need to counter opponent)
+        // Other stats use: average of athlete weight and opponent stat
         let effective: number;
         if (stat === "recovery") {
             effective = athleteWeights[stat];
         } else {
-            effective = athleteWeights[stat] - opponentStats[stat];
-            // Ensure non-negative
-            if (effective < 0) effective = 0;
+            effective = athleteWeights[stat];
         }
 
         effectiveWeights[stat] = effective;

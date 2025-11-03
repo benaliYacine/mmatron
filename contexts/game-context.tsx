@@ -132,13 +132,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         const nextId = currentId + 1;
 
         // Unlock the next opponent when navigating to it
+        // Preserve slider state between fights (only reset via reset button)
         setGameState((prev) => ({
             ...prev,
             currentOpponentId: nextId,
             unlockedOpponents: [
                 ...new Set([...prev.unlockedOpponents, nextId]),
             ],
-            sliderState: DEFAULT_SLIDER_STATE,
             currentScreen: "training-room",
         }));
     }, [gameState.currentOpponentId]);

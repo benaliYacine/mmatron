@@ -33,14 +33,14 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                     {/* Inputs */}
                     <Card className="p-6 space-y-4 bg-card">
                         <Badge variant="default" className="w-fit">
-                            Inputs
+                            Weights
                         </Badge>
                         <h3 className="text-2xl font-bold text-foreground">
                             Training Sliders
                         </h3>
                         <p className="text-sm text-muted-foreground">
                             Your seven training sliders were the{" "}
-                            <strong>inputs</strong> to the perceptron:
+                            <strong>weights</strong> to the perceptron:
                         </p>
                         <ul className="text-sm text-muted-foreground space-y-1">
                             <li>💪 Conditioning</li>
@@ -56,39 +56,32 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                     {/* Weights */}
                     <Card className="p-6 space-y-4 bg-primary/5 border-primary">
                         <Badge variant="default" className="w-fit">
-                            Weights
+                            Inputs
                         </Badge>
                         <h3 className="text-2xl font-bold text-foreground">
-                            Born Strengths + Opponent Stats
+                            Player Stats
                         </h3>
                         <p className="text-sm text-muted-foreground">
-                            Each input was multiplied by a{" "}
-                            <strong>weight</strong>:
+                            Each weight was multiplied by the{" "}
+                            <strong>input</strong>:
                         </p>
                         <ul className="text-sm text-muted-foreground space-y-2">
                             <li>
                                 <strong className="text-foreground">
-                                    Base:
+                                    Your athlete&apos;s stats
                                 </strong>{" "}
-                                Your athlete&apos;s genetics
+                                from your training choices
                             </li>
                             <li>
+                                These are your player&apos;s final stats after
+                                training
+                            </li>
+                            <li>
+                                The perceptron uses only{" "}
                                 <strong className="text-foreground">
-                                    Adjusted by:
-                                </strong>{" "}
-                                Opponent&apos;s strengths/weaknesses
-                            </li>
-                            <li>
-                                <strong className="text-primary">
-                                    Strong opponents
-                                </strong>{" "}
-                                = counter them!
-                            </li>
-                            <li>
-                                <strong className="text-muted">
-                                    Weak opponents
-                                </strong>{" "}
-                                = exploit them!
+                                    your stats
+                                </strong>
+                                , not the opponent&apos;s
                             </li>
                         </ul>
                     </Card>

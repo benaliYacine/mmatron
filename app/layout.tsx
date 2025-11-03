@@ -7,12 +7,25 @@ const bangers = Bangers({
     subsets: ["latin"],
     weight: "400",
     variable: "--font-sans",
+    fallback: ["Impact", "Arial Black", "Arial", "sans-serif"],
+    display: "swap",
 });
 
 const spaceMono = Space_Mono({
     subsets: ["latin"],
     weight: ["400", "700"],
     variable: "--font-mono",
+    fallback: [
+        "ui-monospace",
+        "SFMono-Regular",
+        "Menlo",
+        "Monaco",
+        "Consolas",
+        "Liberation Mono",
+        "Courier New",
+        "monospace",
+    ],
+    display: "swap",
 });
 
 export const metadata: Metadata = {

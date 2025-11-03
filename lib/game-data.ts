@@ -42,7 +42,7 @@ export const GAME_CONFIG: GameConfig = {
             name: "Breather Bruno",
             description: "Cardio machine with stamina for days",
             avatar: "/characters/bruno.png",
-            threshold: 8.0,
+            threshold: 6.5,
             stats: {
                 conditioning: 0.9,
                 striking: 0.4,
@@ -58,7 +58,7 @@ export const GAME_CONFIG: GameConfig = {
             name: "Twisty Tia",
             description: "Lightning-fast footwork specialist",
             avatar: "/characters/tia.png",
-            threshold: 8.6,
+            threshold: 7.0,
             stats: {
                 conditioning: 0.6,
                 striking: 0.3,
@@ -74,7 +74,7 @@ export const GAME_CONFIG: GameConfig = {
             name: "Wall Hugo",
             description: "Unbreakable grappler with iron defense",
             avatar: "/characters/wall.png",
-            threshold: 9.0,
+            threshold: 7.5,
             stats: {
                 conditioning: 0.3,
                 striking: 0.7,
@@ -90,7 +90,7 @@ export const GAME_CONFIG: GameConfig = {
             name: "Storm Rina",
             description: "Balanced fighter with no weaknesses",
             avatar: "/characters/rina.png",
-            threshold: 9.2,
+            threshold: 7.8,
             stats: {
                 conditioning: 0.7,
                 striking: 0.8,
@@ -106,7 +106,7 @@ export const GAME_CONFIG: GameConfig = {
             name: "Sneak Nico",
             description: "Clever tactician with mental edge",
             avatar: "/characters/nico.png",
-            threshold: 9.4,
+            threshold: 8.0,
             stats: {
                 conditioning: 0.5,
                 striking: 0.5,
@@ -122,7 +122,7 @@ export const GAME_CONFIG: GameConfig = {
             name: "Boss Kato",
             description: "Championship-level all-around master",
             avatar: "/characters/kato.png",
-            threshold: 9.7,
+            threshold: 8.5,
             stats: {
                 conditioning: 0.8,
                 striking: 0.8,
