@@ -1,65 +1,212 @@
-import Image from "next/image";
+"use client";
+
+import { GameProvider, useGame } from "@/contexts/game-context";
+import { LandingScreen } from "@/components/screens/landing-screen";
+import { HowToPlayScreen } from "@/components/screens/how-to-play-screen";
+import { ChooseAthleteScreen } from "@/components/screens/choose-athlete-screen";
+import { OpponentPathScreen } from "@/components/screens/opponent-path-screen";
+import { TrainingRoomScreen } from "@/components/screens/training-room-screen";
+import { ResultOverlay } from "@/components/screens/result-overlay";
+import { EndScreen } from "@/components/screens/end-screen";
+import { GAME_CONFIG } from "@/lib/game-data";
+import { INITIAL_GAME_STATE } from "@/lib/game-types";
+
+function GameContent() {
+    const {
+        gameState,
+        setScreen,
+        selectAthlete,
+        selectOpponent,
+        updateSliders,
+        fight,
+        resetSliders,
+        getCurrentAthlete,
+        getCurrentOpponent,
+        isOpponentUnlocked,
+        isOpponentBeaten,
+        getOpponent,
+        goToNextOpponent,
+    } = useGame();
+
+    // Navigation handlers
+    const handleStart = () => setScreen("how-to-play");
+    const handleHowToPlayContinue = () => setScreen("choose-athlete");
+    const handleAthleteSelect = (athleteId: string) => {
+        selectAthlete(athleteId);
+        setScreen("opponent-path");
+    };
+    const handleOpponentSelect = (opponentId: number) => {
+        selectOpponent(opponentId);
+        setScreen("training-room");
+    };
+    const handleFight = () => {
+        fight();
+        // Result screen is set by fight() in context
+    };
+    const handleBackToPath = () => {
+        resetSliders();
+        setScreen("opponent-path");
+    };
+    const handleTryAgain = () => {
+        // Close overlay, keep same sliders and opponent, fight again
+        setScreen("training-room");
+        // Small delay to show we're back in training room before fighting
+        setTimeout(() => {
+            fight();
+        }, 100);
+    };
+    const handleTweakTraining = () => {
+        // Go back to training room
+        setScreen("training-room");
+    };
+    const handleNextOpponent = () => {
+        const currentId = gameState.currentOpponentId || 1;
+        const nextOpponent = getOpponent(currentId + 1);
+        if (nextOpponent) {
+            // Use the new goToNextOpponent which handles unlocking
+            goToNextOpponent();
+        } else {
+            // No more opponents - show end screen or go back to path
+            const allBeaten = GAME_CONFIG.opponents.every((opp) =>
+                gameState.beatenOpponents.includes(opp.id)
+            );
+            if (allBeaten) {
+                setScreen("end-screen");
+            } else {
+                handleBackToPath();
+            }
+        }
+    };
+    const handleEndScreen = () => {
+        setScreen("end-screen");
+    };
+    const handleRestart = () => {
+        // Reset everything
+        window.location.reload();
+    };
+
+    // Render current screen
+    if (gameState.currentScreen === "landing") {
+        return <LandingScreen onStart={handleStart} />;
+    }
+
+    if (gameState.currentScreen === "how-to-play") {
+        return <HowToPlayScreen onContinue={handleHowToPlayContinue} />;
+    }
+
+    if (gameState.currentScreen === "choose-athlete") {
+        return (
+            <ChooseAthleteScreen
+                athletes={GAME_CONFIG.athletes}
+                onSelect={handleAthleteSelect}
+            />
+        );
+    }
+
+    if (gameState.currentScreen === "opponent-path") {
+        return (
+            <OpponentPathScreen
+                opponents={GAME_CONFIG.opponents}
+                unlockedOpponents={gameState.unlockedOpponents}
+                beatenOpponents={gameState.beatenOpponents}
+                onSelectOpponent={handleOpponentSelect}
+                onEndScreen={handleEndScreen}
+            />
+        );
+    }
+
+    if (gameState.currentScreen === "training-room") {
+        const athlete = getCurrentAthlete();
+        const opponent = getCurrentOpponent();
+
+        if (!athlete || !opponent) {
+            return (
+                <div className="flex min-h-screen items-center justify-center">
+                    <p className="text-muted-foreground">
+                        Error: Athlete or opponent not selected
+                    </p>
+                </div>
+            );
+        }
+
+        return (
+            <TrainingRoomScreen
+                athlete={athlete}
+                opponent={opponent}
+                sliders={gameState.sliderState}
+                timeBudget={GAME_CONFIG.time_budget}
+                onUpdateSliders={updateSliders}
+                onFight={handleFight}
+                onReset={resetSliders}
+                onBackToPath={handleBackToPath}
+            />
+        );
+    }
+
+    if (gameState.currentScreen === "result" && gameState.lastFightResult) {
+        const opponent = getCurrentOpponent();
+        const currentId = gameState.currentOpponentId || 1;
+        const hasNextOpponent = currentId < GAME_CONFIG.opponents.length;
+
+        if (!opponent) {
+            return null;
+        }
+
+        return (
+            <>
+                {/* Show training room in background */}
+                {(() => {
+                    const athlete = getCurrentAthlete();
+                    if (!athlete) return null;
+
+                    return (
+                        <TrainingRoomScreen
+                            athlete={athlete}
+                            opponent={opponent}
+                            sliders={gameState.sliderState}
+                            timeBudget={GAME_CONFIG.time_budget}
+                            onUpdateSliders={updateSliders}
+                            onFight={handleFight}
+                            onReset={resetSliders}
+                            onBackToPath={handleBackToPath}
+                        />
+                    );
+                })()}
+
+                {/* Result overlay on top */}
+                <ResultOverlay
+                    result={gameState.lastFightResult}
+                    sliders={gameState.sliderState}
+                    opponent={opponent}
+                    onTryAgain={handleTryAgain}
+                    onTweakTraining={handleTweakTraining}
+                    onNextOpponent={handleNextOpponent}
+                    onBackToPath={handleBackToPath}
+                    onEndScreen={handleEndScreen}
+                    hasNextOpponent={hasNextOpponent}
+                    allOpponentsBeaten={
+                        gameState.lastFightResult?.won &&
+                        opponent.id ===
+                            GAME_CONFIG.opponents[
+                                GAME_CONFIG.opponents.length - 1
+                            ].id
+                    }
+                />
+            </>
+        );
+    }
+
+    if (gameState.currentScreen === "end-screen") {
+        return <EndScreen onRestart={handleRestart} />;
+    }
+
+    return null;
+}
 
 export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    return (
+        <GameProvider>
+            <GameContent />
+        </GameProvider>
+    );
 }

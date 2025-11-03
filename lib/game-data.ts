@@ -1,0 +1,122 @@
+import { GameConfig } from "./game-types";
+
+export const GAME_CONFIG: GameConfig = {
+  time_budget: 20,
+  athletes: [
+    {
+      id: "nora_quick",
+      name: "Nora Quick",
+      description: "Speed and endurance specialist",
+      weights: {
+        striking: 0.3,
+        grappling: 0.2,
+        cardio: 0.8,
+        footwork: 0.7,
+        mindset: 0.4,
+        sleep: 0.2,
+      },
+      bias_range: [-0.1, 0.2],
+    },
+    {
+      id: "max_heavy",
+      name: "Max Heavy",
+      description: "Power and technique master",
+      weights: {
+        striking: 0.9,
+        grappling: 0.7,
+        cardio: 0.3,
+        footwork: 0.2,
+        mindset: 0.3,
+        sleep: 0.2,
+      },
+      bias_range: [-0.05, 0.15],
+    },
+  ],
+  opponents: [
+    {
+      id: 1,
+      name: "Breather Bruno",
+      description: "Cardio machine with stamina for days",
+      threshold: 8.0,
+      stats: {
+        striking: 0.4,
+        grappling: 0.3,
+        cardio: 0.9,
+        footwork: 0.7,
+        mindset: 0.3,
+        sleep: 0.5,
+      },
+    },
+    {
+      id: 2,
+      name: "Twisty Tia",
+      description: "Lightning-fast footwork specialist",
+      threshold: 8.6,
+      stats: {
+        striking: 0.3,
+        grappling: 0.4,
+        cardio: 0.6,
+        footwork: 0.9,
+        mindset: 0.4,
+        sleep: 0.4,
+      },
+    },
+    {
+      id: 3,
+      name: "Wall Hugo",
+      description: "Unbreakable grappler with iron defense",
+      threshold: 9.0,
+      stats: {
+        striking: 0.7,
+        grappling: 0.9,
+        cardio: 0.3,
+        footwork: 0.2,
+        mindset: 0.3,
+        sleep: 0.4,
+      },
+    },
+    {
+      id: 4,
+      name: "Storm Rina",
+      description: "Balanced fighter with no weaknesses",
+      threshold: 9.2,
+      stats: {
+        striking: 0.8,
+        grappling: 0.5,
+        cardio: 0.7,
+        footwork: 0.6,
+        mindset: 0.5,
+        sleep: 0.3,
+      },
+    },
+    {
+      id: 5,
+      name: "Sneak Nico",
+      description: "Clever tactician with mental edge",
+      threshold: 9.4,
+      stats: {
+        striking: 0.5,
+        grappling: 0.4,
+        cardio: 0.5,
+        footwork: 0.9,
+        mindset: 0.8,
+        sleep: 0.3,
+      },
+    },
+    {
+      id: 6,
+      name: "Boss Kato",
+      description: "Championship-level all-around master",
+      threshold: 9.7,
+      stats: {
+        striking: 0.8,
+        grappling: 0.9,
+        cardio: 0.8,
+        footwork: 0.6,
+        mindset: 0.7,
+        sleep: 0.5,
+      },
+    },
+  ],
+};
+

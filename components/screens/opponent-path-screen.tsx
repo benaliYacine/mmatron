@@ -1,0 +1,171 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Opponent } from "@/lib/game-types";
+import { Check, Lock } from "lucide-react";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+interface OpponentPathScreenProps {
+    opponents: Opponent[];
+    unlockedOpponents: number[];
+    beatenOpponents: number[];
+    onSelectOpponent: (opponentId: number) => void;
+    onEndScreen: () => void;
+}
+
+export function OpponentPathScreen({
+    opponents,
+    unlockedOpponents,
+    beatenOpponents,
+    onSelectOpponent,
+    onEndScreen,
+}: OpponentPathScreenProps) {
+    const allBeaten = opponents.every((opp) =>
+        beatenOpponents.includes(opp.id)
+    );
+
+    return (
+        <div className="flex min-h-screen items-center justify-center bg-background p-4">
+            <div className="flex flex-col items-center gap-8 max-w-6xl w-full">
+                <div className="text-center">
+                    <h2 className="text-4xl font-bold text-foreground mb-2">
+                        Opponent Path
+                    </h2>
+                    <p className="text-muted-foreground">
+                        Choose your next challenge
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full">
+                    {opponents.map((opponent) => {
+                        const isUnlocked = unlockedOpponents.includes(
+                            opponent.id
+                        );
+                        const isBeaten = beatenOpponents.includes(opponent.id);
+
+                        return (
+                            <OpponentBubble
+                                key={opponent.id}
+                                opponent={opponent}
+                                isUnlocked={isUnlocked}
+                                isBeaten={isBeaten}
+                                onSelect={onSelectOpponent}
+                            />
+                        );
+                    })}
+                </div>
+
+                {allBeaten && (
+                    <Card className="p-6 text-center border-primary">
+                        <h3 className="text-2xl font-bold text-foreground mb-2">
+                            🏆 All Opponents Defeated!
+                        </h3>
+                        <p className="text-muted-foreground mb-4">
+                            You&apos;ve mastered the fundamentals. Ready to
+                            learn what happened?
+                        </p>
+                        <Button size="lg" onClick={onEndScreen}>
+                            See What You Learned
+                        </Button>
+                    </Card>
+                )}
+
+                {/* Always show access to educational content */}
+                <div className="p-4 border-muted">
+                    <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={onEndScreen}
+                        className="w-full"
+                    >
+                        📚 What you'll Learn
+                    </Button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+interface OpponentBubbleProps {
+    opponent: Opponent;
+    isUnlocked: boolean;
+    isBeaten: boolean;
+    onSelect: (opponentId: number) => void;
+}
+
+function OpponentBubble({
+    opponent,
+    isUnlocked,
+    isBeaten,
+    onSelect,
+}: OpponentBubbleProps) {
+    if (!isUnlocked) {
+        return (
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Card className="p-6 flex flex-col items-center gap-3 opacity-50 cursor-not-allowed">
+                            <Lock className="h-8 w-8 text-muted-foreground" />
+                            <h3 className="text-xl font-semibold text-muted-foreground">
+                                ???
+                            </h3>
+                            <Badge variant="secondary">Locked</Badge>
+                        </Card>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Beat previous opponents to unlock</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        );
+    }
+
+    return (
+        <Card
+            className="p-6 flex flex-col items-center gap-3 hover:border-primary transition-colors cursor-pointer relative"
+            onClick={() => onSelect(opponent.id)}
+        >
+            {isBeaten && (
+                <div className="absolute top-2 right-2">
+                    <div className="rounded-full bg-primary p-1">
+                        <Check className="h-4 w-4 text-primary-foreground" />
+                    </div>
+                </div>
+            )}
+
+            <div className="text-4xl">{getOpponentEmoji(opponent.id)}</div>
+
+            <h3 className="text-xl font-semibold text-foreground text-center">
+                {opponent.name}
+            </h3>
+
+            <p className="text-sm text-muted-foreground text-center">
+                {opponent.description}
+            </p>
+
+            <Badge variant={isBeaten ? "default" : "secondary"}>
+                {isBeaten ? "Defeated" : `Level ${opponent.id}`}
+            </Badge>
+
+            <Button
+                variant={isBeaten ? "outline" : "default"}
+                size="sm"
+                className="w-full mt-2"
+            >
+                {isBeaten ? "Rematch" : "Fight"}
+            </Button>
+        </Card>
+    );
+}
+
+function getOpponentEmoji(id: number): string {
+    const emojis = ["💨", "🌪️", "🧱", "⚡", "🎭", "👑"];
+    return emojis[id - 1] || "👤";
+}
