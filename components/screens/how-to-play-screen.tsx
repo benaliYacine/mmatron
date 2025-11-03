@@ -11,7 +11,12 @@ interface HowToPlayScreenProps {
 
 export function HowToPlayScreen({ onContinue, onBack }: HowToPlayScreenProps) {
     return (
-        <div className="flex min-h-screen items-center justify-center bg-background p-4">
+        <div
+            className="flex min-h-screen items-center justify-center bg-cover bg-center bg-no-repeat p-4"
+            style={{
+                backgroundImage: `url('/background.svg')`,
+            }}
+        >
             <Card className="flex flex-col items-center gap-8 p-12 max-w-3xl relative">
                 {onBack && (
                     <Button

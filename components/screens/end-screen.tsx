@@ -12,7 +12,12 @@ interface EndScreenProps {
 
 export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
     return (
-        <div className="min-h-screen bg-background p-6 flex items-center justify-center">
+        <div
+            className="min-h-screen bg-cover bg-center bg-no-repeat p-6 flex items-center justify-center"
+            style={{
+                backgroundImage: `url('/background.svg')`,
+            }}
+        >
             <Card className="p-12 max-w-4xl space-y-8">
                 <div className="text-center space-y-3">
                     <h2 className="text-5xl font-bold text-foreground">

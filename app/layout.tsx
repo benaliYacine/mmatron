@@ -1,27 +1,47 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Bangers, Space_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeToggle } from "@/components/theme-toggle";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
+const bangers = Bangers({
+    subsets: ["latin"],
+    weight: "400",
+    variable: "--font-sans",
+});
+
+const spaceMono = Space_Mono({
+    subsets: ["latin"],
+    weight: ["400", "700"],
+    variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
-  title: "MMATRON - Learn How Perceptrons Work",
-  description: "An educational MMA-themed game teaching perceptron concepts to kids",
+    title: "MMATRON - Learn How Perceptrons Work",
+    description:
+        "An educational MMA-themed game teaching perceptron concepts to kids",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
-        {children}
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en" suppressHydrationWarning>
+            <body
+                className={`${bangers.variable} ${spaceMono.variable} font-sans antialiased`}
+            >
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    {children}
+                    <ThemeToggle />
+                </ThemeProvider>
+            </body>
+        </html>
+    );
 }

@@ -49,7 +49,12 @@ export function OpponentPathScreen({
     );
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-background p-4">
+        <div
+            className="flex min-h-screen items-center justify-center bg-cover bg-center bg-no-repeat p-4"
+            style={{
+                backgroundImage: `url('/background.svg')`,
+            }}
+        >
             <div className="flex flex-col items-center gap-8 max-w-6xl w-full">
                 <div className="text-center">
                     <h2 className="text-4xl font-bold text-foreground mb-2">

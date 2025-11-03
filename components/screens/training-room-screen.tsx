@@ -53,7 +53,12 @@ export function TrainingRoomScreen({
     const usedBudget = Object.values(sliders).reduce((a, b) => a + b, 0);
 
     return (
-        <div className="min-h-screen bg-background p-6">
+        <div
+            className="min-h-screen bg-cover bg-center bg-no-repeat p-6"
+            style={{
+                backgroundImage: `url('/background.svg')`,
+            }}
+        >
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Top Strip - Athlete and Opponent Info */}
                 <div className="flex items-center justify-between">
