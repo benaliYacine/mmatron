@@ -1,7 +1,7 @@
 # MMATRON — UI/UX Spec (Opponent‑Aware Weights)
 
-> **Goal for kids (~10 y/o):** Feel how a perceptron works _without math_. Kids act as the coach: pick an athlete, set training sliders, and fight different opponents.  
-> **Key twist:** Athlete has **born strengths** (base weights), but **each opponent** changes what matters **for this fight**, so the effective weights change per match.
+> **Goal for kids (~10 y/o):** Feel how a perceptron works _without math_. Kids act as the coach: pick an athlete, set training sliders, and fight different opponents.
+> **Key twist:** Athlete has **born strengths** (base weights genitics, prefered sport, for example he likes striking, ke Recover quickly), but **each opponent** changes what matters **for this fight**, so the effective weights change per match.
 
 ---
 
@@ -12,9 +12,9 @@
 -   **Visible cause → effect:** Loss shows **one or two** actionable tips.
 -   **Never stuck:** Kid can always move to the next opponent and return later.
 -   **Clarity about weights:**
-    -   Show **Athlete stats** (static bars, non-numeric).
-    -   Show **Opponent Focus** (badges/highlights per fight).
-    -   Internally, the **effective weight** = `athlete_weight * opponent_focus_multiplier`.
+    -   Show **Athlete stats** (static bars).
+    -   Show **Opponent stats **
+    -   Internally, the **effective weight** = `athlete_weight - opponent_stat` for each weight
 
 ---
 
@@ -24,7 +24,7 @@
 2. **How to Play (1 screen)** → 3 pictograms + **Let’s Go**.
 3. **Choose Athlete** → select 1 of 2–3 athletes (shows stats).
 4. **Opponent Path (Levels)** → row of 6 opponent bubbles; next is always unlocked.
-5. **Training Room** → sliders + Born Strengths + Opponent Focus. **Fight!**
+5. **Training Room** → sliders + Born Strengths + Opponent stats. **Fight!**
 6. **Result Overlay** → WIN or LOSS, tiny animation.
     - On LOSS: **Assistant Advice** (up to 2 tips), buttons: **Try Again**, **Tweak Training**, **Next Opponent**.
 7. **End Screen (“What you learned”)** → friendly perceptron diagram mapping.
@@ -66,19 +66,20 @@
 **Top strip**
 
 -   Athlete badge (name + mini Born Strengths icon row).
--   Opponent badge (face + **Opponent Focus** badges).
+-   Opponent badge (face + **Opponent Stats** badges).
 
 **Center left — Training Sliders (inputs)**
 
--   6 chunky sliders with icons (0–10 ticks):  
-    🥊 Striking, 🤼 Grappling, ❤️ Cardio, 👣 Footwork, 🧠 Mindset, 😴 Sleep
+-   6 chunky sliders with icons (0–10 ticks):🥊 Striking, 🤼 Grappling, ❤️ Cardio, 👣 Footwork, 🧠 Mindset, 😴 Sleep
 -   **Time Budget bar** under sliders (e.g., 20 points). Turns orange if the kid spends nearly all points on one stat.
 
 **Center right — Knowledge Panels**
 
--   **Born Strengths** (read‑only): six tiny bars, **static** per athlete (“How much this training usually counts for _this athlete_.”).
--   **Opponent Focus** (read‑only): 1–3 **glowing badges** for this fight (e.g., “Cardio matters here”, “Footwork helps”).  
-    _(No numbers. This visually explains why weights change between fights without showing math.)_
+-   **Born Strengths** (read‑only): six tiny bars, **static** per athlete ("How much this training usually counts for _this athlete_.").
+-   **Opponent Stats** (read‑only): six bars showing opponent's strengths/weaknesses for this fight.
+    -   High bars with glowing badges: "Strong at Striking!" → You need to counter this
+    -   Low bars: "Weak at Cardio" → You can exploit this
+        _(No numbers. This visually explains why training importance changes per fight without showing math.)_
 
 **Bottom actions**
 
@@ -99,33 +100,58 @@
 
 -   Friendly drawing of a perceptron with simple labels:
     -   **Inputs** = your six training sliders.
-    -   **Weights** = start from your athlete’s **Born Strengths**, but change a bit for each **Opponent Focus** (fight‑day twist).
+    -   **Weights** = start from your athlete's **Born Strengths**, but change based on each **opponent's stats** (opponent's strengths change what matters for this fight).
     -   **Hidden Line** = the fight pass line (we keep it hidden during play).
     -   **Output** = WIN or LOSS.
 -   One sentence summary:
-    > “A perceptron mixes your trainings (using your athlete’s strengths and the fight’s focus) and checks if it’s enough to win.”
+    > "A perceptron mixes your trainings using your athlete's strengths, but each opponent's stats change what matters most for that fight—strong opponents force you to counter, weak areas let you exploit!"
 
 ---
 
 ## 3) Opponent‑Aware Weights (Kid‑safe Visuals)
 
--   Internally compute **effective weights** each fight:
-    ```
-    effective_w[i] = athlete_w[i] * opponent_multiplier[i]
-    ```
--   **Born Strengths** panel shows athlete_w (static bars).
--   **Opponent Focus** shows _which trainings are boosted_ this fight (badges/glow).
-    -   Never display numbers; only visual emphasis.
+### 3.1 Effective Weight Calculation
 
-**Example UI micro‑copy**
+**Core Concept:** Each opponent has their own strengths and weaknesses (stats). These opponent stats determine what training matters most for THIS specific fight:
 
--   Opponent Focus section label: “For this fight:”
--   Badges:
-    -   “Cardio helps here.”
-    -   “Footwork helps.”
-    -   “Striking matters less today.” (optional later‑level hint)
+-   **If opponent is STRONG at something** (high stat, e.g., great striker):
 
----
+    -   You need to **counter their strength** → Focus MORE on that area
+    -   Your effective weight for that stat **increases** (becomes more important)
+    -   Example: Opponent is elite at Striking → You need more Striking training to compete
+
+-   **If opponent is WEAK at something** (low stat, e.g., poor cardio):
+
+    -   You can **exploit their weakness** → Even if you don't train much, it helps
+    -   Your effective weight for that stat might stay similar or slightly decrease
+    -   Example: Opponent has weak Cardio → Your Cardio training is still valuable but less critical
+
+**Internal Formula:**
+
+```
+effective_w[i] = athlete_w[i] - opponent_stats[i]
+```
+
+Where:
+
+-   `athlete_w[i]` = Your athlete's base strength in stat `i` (genetics/preference)
+-   `opponent_stats[i]` = Opponent's ability in stat `i` (0-1 range)
+-   If `opponent_stats[i]` is high → subtraction reduces effective weight less (net: higher effective weight, more important)
+-   If `opponent_stats[i]` is low → subtraction reduces effective weight more (net: lower effective weight, less critical)
+
+**Alternative interpretation (depending on implementation):**
+The subtraction creates a **differential** that determines training importance:
+
+-   High opponent stat → Small reduction → Effective weight stays high → Need to train more
+-   Low opponent stat → Larger reduction → Effective weight lower → Less training needed to exploit
+
+### 3.2 Visual Representation
+
+-   **Born Strengths** panel shows `athlete_w` (static bars, per athlete).
+-   **Opponent Stats** panel shows opponent's strengths/weaknesses visually:
+    -   High bars = Opponent is strong here (you need to counter it)
+    -   Low bars = Opponent is weak here (you can exploit it)
+-   Never display numbers to kids; only visual bars/badges showing relative strengths.
 
 ## 4) Assistant Advice (Loss Feedback)
 
@@ -144,11 +170,9 @@ Show **max 2** lines chosen by simple rules:
 
 ## 5) Progression & Difficulty
 
--   **Weights vary per opponent** via multipliers (Opponent Focus), but athlete Born Strengths stay visible and constant.
--   Ramps across 6 levels:
-    -   **L1–2:** One clear focus (e.g., Cardio).
-    -   **L3–4:** Two‑stat synergies (Cardio + Footwork).
-    -   **L5–6:** Tradeoffs; avoid maxing one stat; one “matters less” badge may appear.
+**Weights vary per opponent** via opponants stats, but athlete Born Strengths stay visible and constant.
+
+Ramps across 6 levels:each one a diffrent opponant, and each one is a bit harder than the previus
 
 **Never stuck rule:** Next Opponent always available.
 
@@ -192,45 +216,92 @@ Show **max 2** lines chosen by simple rules:
             "id": 1,
             "name": "Breather Bruno",
             "threshold": 8.0,
-            "focus": { "cardio": 1.4, "footwork": 1.2 } // boosted for this fight
+            "stats": {
+                "striking": 0.4,
+                "grappling": 0.3,
+                "cardio": 0.9,
+                "footwork": 0.7,
+                "mindset": 0.3,
+                "sleep": 0.5
+            }
         },
         {
             "id": 2,
             "name": "Twisty Tia",
             "threshold": 8.6,
-            "focus": { "footwork": 1.5, "cardio": 1.2 }
+            "stats": {
+                "striking": 0.3,
+                "grappling": 0.4,
+                "cardio": 0.6,
+                "footwork": 0.9,
+                "mindset": 0.4,
+                "sleep": 0.4
+            }
         },
         {
             "id": 3,
             "name": "Wall Hugo",
             "threshold": 9.0,
-            "focus": { "grappling": 1.5, "striking": 1.2 }
+            "stats": {
+                "striking": 0.7,
+                "grappling": 0.9,
+                "cardio": 0.3,
+                "footwork": 0.2,
+                "mindset": 0.3,
+                "sleep": 0.4
+            }
         },
         {
             "id": 4,
             "name": "Storm Rina",
             "threshold": 9.2,
-            "focus": { "cardio": 1.2, "footwork": 1.2, "striking": 0.8 } // one de‑emphasized
+            "stats": {
+                "striking": 0.8,
+                "grappling": 0.5,
+                "cardio": 0.7,
+                "footwork": 0.6,
+                "mindset": 0.5,
+                "sleep": 0.3
+            }
         },
         {
             "id": 5,
             "name": "Sneak Nico",
             "threshold": 9.4,
-            "focus": { "footwork": 1.4, "mindset": 1.2 }
+            "stats": {
+                "striking": 0.5,
+                "grappling": 0.4,
+                "cardio": 0.5,
+                "footwork": 0.9,
+                "mindset": 0.8,
+                "sleep": 0.3
+            }
         },
         {
             "id": 6,
             "name": "Boss Kato",
             "threshold": 9.7,
-            "focus": { "grappling": 1.4, "cardio": 1.3, "striking": 0.9 }
+            "stats": {
+                "striking": 0.8,
+                "grappling": 0.9,
+                "cardio": 0.8,
+                "footwork": 0.6,
+                "mindset": 0.7,
+                "sleep": 0.5
+            }
         }
     ]
 }
 ```
 
-> **Effective weight calculation per fight:**  
-> `effective_w = normalize( athlete.weights ⊙ opponent.focus_defaults )`  
-> where `focus_defaults` uses `1.0` for unspecified stats. (Optional normalization keeps scores within a kid‑tuned range.)
+> **Effective weight calculation per fight:** > `effective_w[i] = athlete.weights[i] - opponent.stats[i]`
+>
+> **Interpretation:**
+>
+> -   High opponent stat (e.g., 0.9) → Small reduction → High effective weight → You need to train MORE to counter
+> -   Low opponent stat (e.g., 0.2) → Larger reduction → Lower effective weight → Less training needed (but still useful to exploit)
+>
+> (Optional normalization may be applied to keep scores within a kid‑tuned range.)
 
 ---
 
@@ -238,18 +309,26 @@ Show **max 2** lines chosen by simple rules:
 
 ```pseudo
 // Inputs: sliders x[i] ∈ {0..10}, time_budget (e.g., 20)
-// Athlete base weights a[i], opponent focus multipliers f[i] (default 1.0)
+// Athlete base weights a[i], opponent stats o[i] (0-1 range for each stat)
 // Bias b ~ Uniform(bias_range)
 
-effective_w[i] = a[i] * f[i]
+// Calculate effective weights based on opponent stats
+// High opponent stat → need to counter → effective weight stays high
+// Low opponent stat → can exploit → effective weight lower
+effective_w[i] = a[i] - o[i]
 
-// optional normalization to maintain difficulty curve
+// Ensure non-negative weights (clip to 0 if subtraction goes negative)
+for each i:
+  if effective_w[i] < 0: effective_w[i] = 0
+
+// Optional normalization to maintain difficulty curve
 scale = SUM(effective_w)
 if scale > 0: effective_w[i] = effective_w[i] * (K / scale)   // pick K (e.g., 3.0) to tune scores
 
-// enforce time budget
+// Enforce time budget
 if SUM(x) > time_budget: clamp / auto-scale back to budget
 
+// Calculate fight score
 score = SUM_i (effective_w[i] * x[i]) + b
 
 if score >= threshold:
@@ -262,7 +341,7 @@ tips = []
 hi = top indices by effective_w
 lo = bottom indices by effective_w
 if any x[hi] < mid: tips += ["We needed a bit more " + name(hi_low)]
-if any x[lo] is very high: tips += ["We trained " + name(lo_high) + " a lot, but it didn’t help much here."]
+if any x[lo] is very high: tips += ["We trained " + name(lo_high) + " a lot, but it didn't help much here."]
 if near_threshold: tips = ["So close! Add a small boost to " + name(best_gain)]
 if very skewed and later-level flag: tips += ["Try spreading your time a bit."]
 show first 2 tips
@@ -272,21 +351,24 @@ show first 2 tips
 
 ## 8) Copy (Kid‑simple)
 
--   **How to Play title:** “Pick. Slide. Fight!”
--   **Opponent Focus label:** “For this fight:”
+-   **How to Play title:** "Pick. Slide. Fight!"
+-   **Opponent Stats label:** "Your Opponent:"
+-   **Opponent Stats description:** Show opponent's strengths/weaknesses with simple labels:
+    -   High stat: "Strong at Striking!" or "Elite Grappler"
+    -   Low stat: "Weak at Cardio" or "Poor Footwork"
 -   **Loss tips:**
-    -   “We needed a bit more **Cardio**.”
-    -   “Too much **Striking** for this matchup—spread a little.”
-    -   “**Footwork** helps here more than **Mindset**.”
--   **Next Opponent tooltip:** “Stuck? Try the next fight—come back later!”
--   **End screen line:** “A perceptron mixes your trainings (using your athlete’s strengths and the fight’s focus) and checks if it’s enough to win.”
+    -   "We needed a bit more **Cardio** to match them."
+    -   "Too much **Striking** for this matchup—spread a little."
+    -   "**Footwork** helps here more than **Mindset**."
+-   **Next Opponent tooltip:** "Stuck? Try the next fight—come back later!"
+-   **End screen line:** "A perceptron mixes your trainings using your athlete's strengths, but each opponent's stats change what matters most for that fight—strong opponents force you to counter, weak areas let you exploit!"
 
 ---
 
 ## 9) Art & Interaction Notes
 
 -   Sliders: big ticks, snap feedback; emojis at ends.
--   Opponent Focus badges: glowing chips beside their icons.
+-   Opponent Stats badges: glowing chips showing opponent strengths/weaknesses.
 -   Short animations: 300–400 ms; confetti on WIN, dust poof on LOSS.
 -   Keep screens clean: one big focal area + supporting panels.
 
@@ -298,12 +380,6 @@ show first 2 tips
 -   Use to adjust thresholds and focus multipliers for fair difficulty.
 
 ---
-
-## 11) Implementation Tips
-
--   **Single page app** with route‑like states; keep asset sizes tiny.
--   Use the JSON in §6 for content; safe defaults f[i]=1.0.
--   For class demos, add a hidden "Show Numbers" toggle (dev only).
 
 ---
 
@@ -337,7 +413,7 @@ App
 │   │   ├── Slider (×6)
 │   │   └── TimeBudgetBar
 │   ├── BornStrengthsPanel
-│   └── OpponentFocusPanel
+│   └── OpponentStatsPanel
 ├── ResultOverlay
 │   ├── WinAnimation / LossAnimation
 │   └── AssistantAdvice (if loss)
@@ -388,9 +464,8 @@ where:
 
 **Algorithm:**
 
-1.  **Validation:** When kid adjusts sliders, check if `SUM(all slider values) > time_budget`.
-2.  **Clamping Method:** Proportional scaling (preserves relative training distribution):
-
+1. **Validation:** When kid adjusts sliders, check if `SUM(all slider values) > time_budget`.
+2. **Clamping Method:** Proportional scaling (preserves relative training distribution):
 
     ```
     if SUM(sliders) > time_budget:
@@ -399,8 +474,8 @@ where:
             slider_value = slider_value * scale_factor
     ```
 
-3.  **Allow Under-budget:** Kid can use less than the full budget (no auto-fill).
-4.  **Default Slider Positions:** All sliders start at `0` (blank slate).
+3. **Allow Under-budget:** Kid can use less than the full budget (no auto-fill).
+4. **Default Slider Positions:** All sliders start at `0` (blank slate).
 
 **Time Budget Bar:**
 
@@ -423,7 +498,7 @@ where:
 
 ## 14) UI/UX Specifications
 
-**Platform:** Desktop only. Optimize for 1920×1080 minimum, with graceful scaling to larger screens.
+**Platform:** Desktop only.
 
 **Design System:**
 
@@ -432,6 +507,21 @@ where:
     -   Buttons, Cards, Badges, Progress bars, Sliders, Tooltips, etc.
 -   Visual design can be refined later; focus on clear representation first.
 -   Ensure good contrast and readable text sizes.
+
+**Styling & Theming Requirements:**
+
+-   **Always use Tailwind CSS variables** (defined in `globals.css`) instead of hardcoded colors or values.
+    -   Use semantic color tokens: `bg-background`, `text-foreground`, `border-border`, `text-primary`, `bg-card`, `text-muted-foreground`, etc.
+    -   For opponent stats visualization:
+        -   High stats (strong opponent): Use `destructive` or `chart-1` / `chart-2` variants (warm/danger colors)
+        -   Low stats (weak opponent): Use `muted` or `secondary` variants (cool/neutral colors)
+    -   For time budget bar states:
+        -   Green: `text-green-600` → Use `text-primary` or appropriate semantic token
+        -   Yellow/Orange: `text-yellow-600` → Use `text-chart-3` or `text-chart-4`
+        -   Red: `text-red-600` → Use `text-destructive`
+-   **Never hardcode colors** like `#FF5733`, `rgb(255, 0, 0)`, or hex values in components.
+-   **Never hardcode spacing** values; use Tailwind spacing scale (`p-4`, `gap-2`, `mt-8`, etc.).
+-   This ensures the entire game respects theme changes (light/dark mode) and maintains visual consistency when theme variables are updated.
 
 ---
 
@@ -466,7 +556,7 @@ interface Opponent {
     id: number;
     name: string;
     threshold: number; // minimum score to win
-    focus: Partial<Record<TrainingStat, number>>; // multipliers (default 1.0)
+    stats: Record<TrainingStat, number>; // opponent's abilities (0-1 range)
     avatar?: string; // optional image path
 }
 
@@ -541,15 +631,14 @@ const INITIAL_GAME_STATE: GameState = {
 
 **On WIN:**
 
-1.  Show confetti animation (~1s).
-2.  Display "WIN!" message with celebration.
-3.  **Automatically unlock next opponent** (if not already unlocked).
-4.  **Buttons:**
+1. Show confetti animation (~1s).
+2. Display "WIN!" message with celebration.
+3. **Automatically unlock next opponent** (if not already unlocked).
+4. **Buttons:**
 
-
-    -   **Next Opponent** (primary): Move to next opponent's training room
-    -   **Replay This Fight**: Return to same opponent with fresh sliders
-    -   **Back to Path**: Return to opponent selection menu
+    - **Next Opponent** (primary): Move to next opponent's training room
+    - **Replay This Fight**: Return to same opponent with fresh sliders
+    - **Back to Path**: Return to opponent selection menu
 
 ### 19.3 Navigation Flow After Win
 
@@ -577,13 +666,17 @@ const INITIAL_GAME_STATE: GameState = {
     ```
     [████████████░░░░░░░░] 12 / 20
     ```
--   **Color States:**
+-   **Color States (using Tailwind variables):**
     -   **Green (default):** `used_budget ≤ 0.8 × time_budget`
+        -   Use: `text-primary` or `bg-primary` (normal state)
     -   **Yellow:** `0.8 × time_budget < used_budget ≤ 0.95 × time_budget`
+        -   Use: `text-chart-3` or `text-chart-4` (warning state)
     -   **Orange:** `used_budget > 0.95 × time_budget` OR any single stat uses >80% of total budget
+        -   Use: `text-chart-4` or `text-chart-5` (caution state)
     -   **Red:** `used_budget > time_budget` (will clamp on Fight!)
+        -   Use: `text-destructive` or `bg-destructive` (error state)
 -   **Real-time Updates:** Bar updates immediately as kid drags sliders.
--   **Warning Animation:** Flash orange/red briefly when budget exceeded.
+-   **Warning Animation:** Flash orange/red briefly when budget exceeded (using `animate-pulse` with destructive colors).
 
 ### 20.2 Slider Feedback
 
@@ -608,7 +701,8 @@ const INITIAL_GAME_STATE: GameState = {
 
 For later levels or expert mode:
 
--   **Subtle hints:** Very light background color on sliders showing "suggested range" based on Opponent Focus.
+-   **Subtle hints:** Very light background color on sliders showing "suggested range" based on Opponent Stats.
+-   **Logic:** Highlight sliders for stats where opponent is strong (you need to counter).
 -   **Not predictive:** Don't show exact optimal values, just gentle guidance.
 -   Only appear if kid has lost to this opponent 2+ times.
 
@@ -618,25 +712,44 @@ For later levels or expert mode:
 
 -   Six horizontal bars, one per training stat.
 -   **Scale:** Each bar shows relative weight (normalized to max weight = full bar).
--   **Visual Distinction:**
-    -   High weight: Long, vibrant colored bar
-    -   Medium weight: Medium-length bar, muted color
-    -   Low weight: Short bar, very muted/transparent
+-   **Visual Distinction (using Tailwind variables):**
+    -   High weight: Long, vibrant colored bar (`bg-primary` or `bg-chart-1`)
+    -   Medium weight: Medium-length bar, muted color (`bg-muted` or `bg-secondary`)
+    -   Low weight: Short bar, very muted/transparent (`bg-muted/50` or `opacity-50`)
 -   **No Numbers:** Pure visual representation.
 
-### 20.5 Opponent Focus Badges
+### 20.5 Opponent Stats Visualization
 
 **Visual Style:**
 
--   **Glowing effect:** Subtle shadow/glow around badge when stat is boosted (focus > 1.0).
--   **Color Coding:**
-    -   Boosted stats: Bright, warm colors (orange, yellow)
-    -   Reduced stats: Cool, muted colors (blue-gray)
--   **Badge Layout:**
-    -   Horizontal row or small grid
-    -   Each badge: icon + text ("Cardio helps here")
-    -   Icons match training stat emojis
--   **Animation:** Gentle pulse or glow effect on initial display.
+-   **High Stat (Opponent Strong):**
+
+    -   Use Tailwind variables: `text-destructive`, `bg-destructive/10`, or `text-chart-1` / `text-chart-2` (warm/danger colors)
+    -   Glowing effect around stat bar (using `ring-destructive` or similar)
+    -   Badge text: "Strong at Striking!" or "Elite Grappler"
+    -   Visual cue: You need to counter this strength
+
+-   **Low Stat (Opponent Weak):**
+
+    -   Use Tailwind variables: `text-muted-foreground`, `bg-muted`, or `text-secondary-foreground` (cool/neutral colors)
+    -   Less prominent visual treatment
+    -   Badge text: "Weak at Cardio" or "Poor Footwork"
+    -   Visual cue: You can exploit this weakness
+
+**Bar Layout:**
+
+-   Six horizontal bars, one per training stat
+-   Each bar shows opponent's ability level (0-1, normalized visually)
+-   High bars = opponent strong here (you need to counter)
+-   Low bars = opponent weak here (you can exploit)
+
+**Badge Layout:**
+
+-   Show 2-3 most significant stats as badges (strongest and weakest)
+-   Horizontal row or small grid
+-   Each badge: icon + text describing opponent's ability
+-   Icons match training stat emojis
+-   **Animation:** Gentle pulse or glow effect on high stats only
 
 ### 20.6 Result Overlay Feedback
 
@@ -660,4 +773,4 @@ For later levels or expert mode:
 
 ---
 
-**That's it!** You now have a tight, opponent‑aware mini‑game that keeps weights intuitive (athlete strengths) while letting each fight shift what matters via Opponent Focus—without exposing math or prediction meters to the kid.
+**That's it!** You now have a tight, opponent‑aware mini‑game that keeps weights intuitive (athlete strengths) while letting each opponent's stats determine what training matters most for each fight—strong opponents force you to counter their strengths, weak opponents let you exploit their weaknesses—all without exposing math or prediction meters to the kid.
