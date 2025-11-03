@@ -25,7 +25,7 @@ export function calculateEffectiveWeights(
         if (stat === "recovery") {
             effective = athleteWeights[stat];
         } else {
-            effective = athleteWeights[stat];
+            effective = (athleteWeights[stat] + opponentStats[stat]) / 2;
         }
 
         effectiveWeights[stat] = effective;

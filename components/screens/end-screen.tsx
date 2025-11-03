@@ -59,7 +59,7 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                             Inputs
                         </Badge>
                         <h3 className="text-2xl font-bold text-foreground">
-                            Player Stats
+                            Born Strengths + Opponent Stats
                         </h3>
                         <p className="text-sm text-muted-foreground">
                             Each weight was multiplied by the{" "}
@@ -68,20 +68,27 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                         <ul className="text-sm text-muted-foreground space-y-2">
                             <li>
                                 <strong className="text-foreground">
-                                    Your athlete&apos;s stats
+                                    Base:
                                 </strong>{" "}
-                                from your training choices
+                                Your athlete&apos;s genetics
                             </li>
                             <li>
-                                These are your player&apos;s final stats after
-                                training
-                            </li>
-                            <li>
-                                The perceptron uses only{" "}
                                 <strong className="text-foreground">
-                                    your stats
-                                </strong>
-                                , not the opponent&apos;s
+                                    Adjusted by:
+                                </strong>{" "}
+                                Opponent&apos;s strengths/weaknesses
+                            </li>
+                            <li>
+                                <strong className="text-primary">
+                                    Strong opponents
+                                </strong>{" "}
+                                = counter them!
+                            </li>
+                            <li>
+                                <strong className="text-destructive">
+                                    Weak opponents
+                                </strong>{" "}
+                                = exploit them!
                             </li>
                         </ul>
                     </Card>
