@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Athlete, STAT_INFO, TRAINING_STATS } from "@/lib/game-types";
+import Image from "next/image";
 
 interface ChooseAthleteScreenProps {
     athletes: Athlete[];
@@ -51,19 +52,27 @@ function AthleteCard({ athlete, onSelect }: AthleteCardProps) {
     const maxWeight = Math.max(...Object.values(athlete.weights));
 
     return (
-        <Card className="p-6 flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h3 className="text-2xl font-bold text-foreground">
-                        {athlete.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                        {athlete.description}
-                    </p>
+        <Card className="p-6 flex flex-col gap-4 hover:shadow-lg transition-shadow">
+            {/* Character Illustration */}
+            {athlete.avatar && (
+                <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-white">
+                    <Image
+                        src={athlete.avatar}
+                        alt={athlete.name}
+                        fill
+                        className="object-cover"
+                        priority
+                    />
                 </div>
-                <Badge variant="secondary" className="text-lg">
-                    {athlete.id === "nora_quick" ? "⚡" : "💪"}
-                </Badge>
+            )}
+
+            <div className="flex flex-col gap-2">
+                <h3 className="text-2xl font-bold text-foreground">
+                    {athlete.name}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                    {athlete.description}
+                </p>
             </div>
 
             <div className="space-y-3">

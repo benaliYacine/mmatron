@@ -7,6 +7,7 @@ export const GAME_CONFIG: GameConfig = {
             id: "nora_quick",
             name: "Nora Quick",
             description: "Speed and endurance specialist",
+            avatar: "/characters/nora.png",
             weights: {
                 striking: 0.3,
                 grappling: 0.2,
@@ -21,6 +22,7 @@ export const GAME_CONFIG: GameConfig = {
             id: "max_heavy",
             name: "Max Heavy",
             description: "Power and technique master",
+            avatar: "/characters/max.png",
             weights: {
                 striking: 0.9,
                 grappling: 0.7,
@@ -37,6 +39,7 @@ export const GAME_CONFIG: GameConfig = {
             id: 1,
             name: "Breather Bruno",
             description: "Cardio machine with stamina for days",
+            avatar: "/characters/bruno.png",
             threshold: 8.0,
             stats: {
                 striking: 0.4,
@@ -51,6 +54,7 @@ export const GAME_CONFIG: GameConfig = {
             id: 2,
             name: "Twisty Tia",
             description: "Lightning-fast footwork specialist",
+            avatar: "/characters/tia.png",
             threshold: 8.6,
             stats: {
                 striking: 0.3,
@@ -65,6 +69,7 @@ export const GAME_CONFIG: GameConfig = {
             id: 3,
             name: "Wall Hugo",
             description: "Unbreakable grappler with iron defense",
+            avatar: "/characters/wall.png",
             threshold: 9.0,
             stats: {
                 striking: 0.7,
@@ -79,6 +84,7 @@ export const GAME_CONFIG: GameConfig = {
             id: 4,
             name: "Storm Rina",
             description: "Balanced fighter with no weaknesses",
+            avatar: "/characters/rina.png",
             threshold: 9.2,
             stats: {
                 striking: 0.8,
@@ -93,6 +99,7 @@ export const GAME_CONFIG: GameConfig = {
             id: 5,
             name: "Sneak Nico",
             description: "Clever tactician with mental edge",
+            avatar: "/characters/nico.png",
             threshold: 9.4,
             stats: {
                 striking: 0.5,
@@ -107,6 +114,7 @@ export const GAME_CONFIG: GameConfig = {
             id: 6,
             name: "Boss Kato",
             description: "Championship-level all-around master",
+            avatar: "/characters/kato.png",
             threshold: 9.7,
             stats: {
                 striking: 0.8,

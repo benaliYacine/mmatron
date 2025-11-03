@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
+import Image from "next/image";
 import {
     Athlete,
     Opponent,
@@ -14,9 +15,13 @@ import {
     TrainingStat,
     DEFAULT_SLIDER_STATE,
 } from "@/lib/game-types";
-import { getTimeBudgetStatus } from "@/lib/game-logic";
+import {
+    getTimeBudgetStatus,
+    calculateBias,
+    getMoodMessage,
+} from "@/lib/game-logic";
 import { useState, useEffect } from "react";
-import { ArrowLeft, RotateCcw } from "lucide-react";
+import { ArrowLeft, RotateCcw, Sparkles, CloudOff } from "lucide-react";
 import {
     Tooltip,
     TooltipContent,
@@ -52,6 +57,50 @@ export function TrainingRoomScreen({
     const budgetStatus = getTimeBudgetStatus(sliders, timeBudget);
     const usedBudget = Object.values(sliders).reduce((a, b) => a + b, 0);
 
+    // Calculate current mood/bias for display
+    const [currentBias, setCurrentBias] = useState<number>(0);
+    const [baseTalent, setBaseTalent] = useState<number>(0);
+    const [moodVariation, setMoodVariation] = useState<number>(0);
+    const [moodMessage, setMoodMessage] = useState<string>("");
+
+    // Update mood when component mounts, athlete changes, or opponent changes
+    useEffect(() => {
+        // Calculate base talent and mood variation separately
+        const [minBias, maxBias] = athlete.bias_range;
+        const talent = minBias + Math.random() * (maxBias - minBias);
+        const mood = -0.15 + Math.random() * 0.3; // -0.15 to +0.15
+        const totalBias = talent + mood;
+
+        setBaseTalent(talent);
+        setMoodVariation(mood);
+        setCurrentBias(totalBias);
+        setMoodMessage(getMoodMessage(totalBias, athlete.name));
+    }, [athlete, opponent]);
+
+    // Get mood icon and color based on bias
+    const getMoodIndicator = () => {
+        if (currentBias > 0.15) {
+            return {
+                icon: Sparkles,
+                color: "text-primary",
+                bgColor: "bg-primary/10",
+            };
+        } else if (currentBias < -0.1) {
+            return {
+                icon: CloudOff,
+                color: "text-muted-foreground",
+                bgColor: "bg-muted",
+            };
+        }
+        return {
+            icon: null,
+            color: "text-foreground",
+            bgColor: "bg-secondary",
+        };
+    };
+
+    const moodIndicator = getMoodIndicator();
+
     return (
         <div
             className="min-h-screen bg-cover bg-center bg-no-repeat p-6"
@@ -61,9 +110,9 @@ export function TrainingRoomScreen({
         >
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Top Strip - Athlete and Opponent Info */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-end justify-between">
                     <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
                         onClick={onBackToPath}
                         className="gap-2"
@@ -74,15 +123,22 @@ export function TrainingRoomScreen({
 
                     <div className="flex gap-8">
                         {/* Athlete Badge */}
-                        <Card className="px-6 py-3 flex items-center gap-3">
-                            <Badge variant="default" className="text-lg">
-                                {athlete.id === "nora_quick" ? "⚡" : "💪"}
-                            </Badge>
+                        <Card className=" p-4 flex items-center gap-4">
+                            {athlete.avatar && (
+                                <div className="relative w-40 h-40 rounded-lg overflow-hidden bg-white">
+                                    <Image
+                                        src={athlete.avatar}
+                                        alt={athlete.name}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                            )}
                             <div>
                                 <p className="text-sm text-muted-foreground">
                                     Your Athlete
                                 </p>
-                                <p className="font-bold text-foreground">
+                                <p className="text-lg font-bold text-foreground">
                                     {athlete.name}
                                 </p>
                             </div>
@@ -90,21 +146,28 @@ export function TrainingRoomScreen({
 
                         {/* VS */}
                         <div className="flex items-center">
-                            <span className="text-2xl font-bold text-pop-art-contrast">
+                            <span className="text-7xl font-bold text-pop-art-red">
                                 VS
                             </span>
                         </div>
 
                         {/* Opponent Badge */}
-                        <Card className="px-6 py-3 flex items-center gap-3">
-                            <Badge variant="secondary" className="text-lg">
-                                {getOpponentEmoji(opponent.id)}
-                            </Badge>
+                        <Card className=" p-4 flex items-center gap-4">
+                            {opponent.avatar && (
+                                <div className="relative w-40 h-40 rounded-lg overflow-hidden bg-white">
+                                    <Image
+                                        src={opponent.avatar}
+                                        alt={opponent.name}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                            )}
                             <div>
                                 <p className="text-sm text-muted-foreground">
                                     Opponent
                                 </p>
-                                <p className="font-bold text-foreground">
+                                <p className="text-lg font-bold text-foreground">
                                     {opponent.name}
                                 </p>
                             </div>
@@ -193,6 +256,132 @@ export function TrainingRoomScreen({
                                 </p>
                             )}
                         </div>
+
+                        {/* Athlete Mood/Bias Indicator */}
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <div className="space-y-2 pt-4 border-t cursor-help">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm font-semibold text-foreground">
+                                                Athlete Mood
+                                            </span>
+                                            <span
+                                                className={`text-sm font-bold ${
+                                                    currentBias > 0.15
+                                                        ? "text-primary"
+                                                        : currentBias < -0.1
+                                                        ? "text-destructive"
+                                                        : "text-chart-3"
+                                                }`}
+                                            >
+                                                {currentBias.toFixed(2)}
+                                            </span>
+                                        </div>
+                                        <Progress
+                                            value={
+                                                ((currentBias + 0.3) / 0.6) *
+                                                100
+                                            }
+                                            className={`h-3 ${
+                                                currentBias > 0.15
+                                                    ? "[&>div]:bg-primary"
+                                                    : currentBias < -0.1
+                                                    ? "[&>div]:bg-destructive"
+                                                    : "[&>div]:bg-chart-3"
+                                            }`}
+                                        />
+                                        <div className="flex items-center gap-2">
+                                            {moodIndicator.icon && (
+                                                <moodIndicator.icon
+                                                    className={`h-3 w-3 ${moodIndicator.color}`}
+                                                />
+                                            )}
+                                            <p
+                                                className={`text-xs ${moodIndicator.color}`}
+                                            >
+                                                {moodMessage}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-xs">
+                                    <div className="space-y-2">
+                                        <p className="font-semibold text-sm">
+                                            How Mood Works:
+                                        </p>
+                                        <div className="text-xs space-y-1">
+                                            <p>
+                                                <strong>
+                                                    Base Talent Range:
+                                                </strong>{" "}
+                                                {athlete.bias_range[0]} to{" "}
+                                                {athlete.bias_range[1]}
+                                            </p>
+                                            <p>
+                                                <strong>
+                                                    Daily Mood Range:
+                                                </strong>{" "}
+                                                -0.15 to +0.15
+                                            </p>
+                                            <p className="pt-1 text-muted-foreground">
+                                                Final = Base Talent + Daily Mood
+                                            </p>
+                                        </div>
+                                        <div className="text-xs space-y-1 pt-2 border-t bg-muted/50 p-2 rounded">
+                                            <p className="font-semibold">
+                                                Current Values:
+                                            </p>
+                                            <p>
+                                                <strong>
+                                                    {athlete.name}&apos;s Talent
+                                                    Today:
+                                                </strong>{" "}
+                                                {baseTalent.toFixed(3)}
+                                            </p>
+                                            <p>
+                                                <strong>Mood Variation:</strong>{" "}
+                                                {moodVariation >= 0 ? "+" : ""}
+                                                {moodVariation.toFixed(3)}
+                                            </p>
+                                            <p className="pt-1 border-t">
+                                                <strong>Final Bias:</strong>{" "}
+                                                <span
+                                                    className={
+                                                        currentBias > 0.15
+                                                            ? "text-primary font-bold"
+                                                            : currentBias < -0.1
+                                                            ? "text-destructive font-bold"
+                                                            : "text-chart-3 font-bold"
+                                                    }
+                                                >
+                                                    {currentBias.toFixed(3)}
+                                                </span>
+                                            </p>
+                                        </div>
+                                        <div className="text-xs space-y-1 pt-2 border-t">
+                                            <p className="font-semibold">
+                                                Mood States:
+                                            </p>
+                                            <p className="text-primary">
+                                                🟢 Sharp (&gt; 0.15): Extra
+                                                boost!
+                                            </p>
+                                            <p className="text-chart-3">
+                                                🟡 Ready (-0.1 to 0.15): Normal
+                                            </p>
+                                            <p className="text-destructive">
+                                                🔴 Tired (&lt; -0.1): Penalty
+                                            </p>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground pt-2 border-t">
+                                            💡 Mood changes each fight, adding
+                                            variability to results!
+                                        </p>
+                                    </div>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     </Card>
 
                     {/* Right Side - Knowledge Panels */}
@@ -355,9 +544,4 @@ function TrainingSlider({ stat, value, onChange }: TrainingSliderProps) {
             />
         </div>
     );
-}
-
-function getOpponentEmoji(id: number): string {
-    const emojis = ["💨", "🌪️", "🧱", "⚡", "🎭", "👑"];
-    return emojis[id - 1] || "👤";
 }

@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Opponent } from "@/lib/game-types";
 import { Check, Lock } from "lucide-react";
+import Image from "next/image";
 import {
     Tooltip,
     TooltipContent,
@@ -190,43 +191,53 @@ function OpponentBubble({
 
     return (
         <Card
-            className="p-6 flex flex-col items-center gap-3 cursor-pointer relative"
+            className="p-4 flex flex-col items-center gap-3 cursor-pointer relative hover:shadow-lg transition-shadow"
             onClick={() => onSelect(opponent.id)}
         >
             {isBeaten && (
-                <div className="absolute top-2 right-2">
+                <div className="absolute top-2 right-2 z-10">
                     <div className="rounded-full bg-primary p-1">
                         <Check className="h-4 w-4 text-primary-foreground" />
                     </div>
                 </div>
             )}
 
-            <div className="text-4xl">{getOpponentEmoji(opponent.id)}</div>
+            {/* Character Illustration */}
+            {opponent.avatar && (
+                <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-white">
+                    <Image
+                        src={opponent.avatar}
+                        alt={opponent.name}
+                        fill
+                        className="object-cover"
+                    />
+                </div>
+            )}
 
-            <h3 className="text-xl font-semibold text-foreground text-center">
-                {opponent.name}
-            </h3>
+            <div className="flex flex-col items-center gap-1 w-full">
+                <h3 className="text-lg font-semibold text-foreground text-center">
+                    {opponent.name}
+                </h3>
 
-            <p className="text-sm text-muted-foreground text-center">
-                {opponent.description}
-            </p>
+                <p className="text-xs text-muted-foreground text-center line-clamp-2">
+                    {opponent.description}
+                </p>
 
-            <Badge variant={isBeaten ? "default" : "secondary"}>
-                {isBeaten ? "Defeated" : `Level ${opponent.id}`}
-            </Badge>
+                <Badge
+                    variant={isBeaten ? "default" : "secondary"}
+                    className="mt-1"
+                >
+                    {isBeaten ? "Defeated" : `Level ${opponent.id}`}
+                </Badge>
+            </div>
 
             <Button
                 variant={isBeaten ? "outline" : "default"}
                 size="sm"
-                className="w-full mt-2"
+                className="w-full"
             >
                 {isBeaten ? "Rematch" : "Fight"}
             </Button>
         </Card>
     );
-}
-
-function getOpponentEmoji(id: number): string {
-    const emojis = ["💨", "🌪️", "🧱", "⚡", "🎭", "👑"];
-    return emojis[id - 1] || "👤";
 }
