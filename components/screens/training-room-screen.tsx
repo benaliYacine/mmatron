@@ -90,7 +90,7 @@ export function TrainingRoomScreen({
 
                         {/* VS */}
                         <div className="flex items-center">
-                            <span className="text-2xl font-bold text-muted-foreground">
+                            <span className="text-2xl font-bold text-pop-art-contrast">
                                 VS
                             </span>
                         </div>

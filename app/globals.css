@@ -264,6 +264,36 @@ h6,
     text-stroke: 2px white;
 }
 
+/* White text with black border for contrast - pop art style */
+button.border-transparent,
+[data-slot="button"].border-transparent {
+    color: white !important;
+    -webkit-text-stroke: 2px black;
+    text-stroke: 2px black;
+    paint-order: stroke fill;
+}
+
+.dark button.border-transparent,
+.dark [data-slot="button"].border-transparent {
+    color: white !important;
+    -webkit-text-stroke: 2px black;
+    text-stroke: 2px black;
+}
+
+/* White text with black border for contrast text */
+.text-pop-art-contrast {
+    color: white;
+    -webkit-text-stroke: 2px black;
+    text-stroke: 2px black;
+    paint-order: stroke fill;
+}
+
+.dark .text-pop-art-contrast {
+    color: white;
+    -webkit-text-stroke: 2px black;
+    text-stroke: 2px black;
+}
+
 /* Pop art style shadow - sharp, no blur */
 @layer utilities {
     .shadow-pop-art {

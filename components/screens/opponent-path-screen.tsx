@@ -60,7 +60,7 @@ export function OpponentPathScreen({
                     <h2 className="text-4xl font-bold text-foreground mb-2">
                         Opponent Path
                     </h2>
-                    <p className="text-muted-foreground">
+                    <p className="text-pop-art-contrast">
                         Choose your next challenge
                     </p>
                 </div>
