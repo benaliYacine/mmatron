@@ -67,25 +67,25 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                         </p>
                         <ul className="text-sm text-muted-foreground space-y-2">
                             <li>
-                                <strong className="text-foreground">
+                                <strong className="text-foreground font-semibold">
                                     Base:
                                 </strong>{" "}
                                 Your athlete&apos;s genetics
                             </li>
                             <li>
-                                <strong className="text-foreground">
+                                <strong className="text-foreground font-semibold">
                                     Adjusted by:
                                 </strong>{" "}
                                 Opponent&apos;s strengths/weaknesses
                             </li>
                             <li>
-                                <strong className="text-primary">
+                                <strong className="text-primary font-semibold">
                                     Strong opponents
                                 </strong>{" "}
                                 = counter them!
                             </li>
                             <li>
-                                <strong className="text-destructive">
+                                <strong className="text-destructive font-semibold">
                                     Weak opponents
                                 </strong>{" "}
                                 = exploit them!
@@ -107,28 +107,28 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                         </p>
                         <div className="text-sm text-muted-foreground space-y-2 border-l-2 border-primary pl-4">
                             <p>
-                                <strong className="text-foreground">
+                                <strong className="text-foreground font-semibold">
                                     Score
                                 </strong>{" "}
                                 = Sum(input × weight) + bias
                             </p>
                             <p>
                                 If{" "}
-                                <strong className="text-foreground">
+                                <strong className="text-foreground font-semibold">
                                     score ≥ threshold
                                 </strong>
                                 :{" "}
-                                <span className="text-primary font-bold">
+                                <span className="text-primary font-semibold">
                                     WIN!
                                 </span>
                             </p>
                             <p>
                                 If{" "}
-                                <strong className="text-foreground">
+                                <strong className="text-foreground font-semibold">
                                     score &lt; threshold
                                 </strong>
                                 :{" "}
-                                <span className="text-muted-foreground font-bold">
+                                <span className="text-muted-foreground font-semibold">
                                     LOSS
                                 </span>
                             </p>

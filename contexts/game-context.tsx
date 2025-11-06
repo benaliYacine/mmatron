@@ -24,6 +24,7 @@ interface GameContextType {
     resetSliders: () => void;
     unlockNextOpponent: () => void;
     goToNextOpponent: () => void;
+    startChampionshipValidation: () => void;
     getAthlete: (athleteId: string) => Athlete | undefined;
     getOpponent: (opponentId: number) => Opponent | undefined;
     getCurrentAthlete: () => Athlete | undefined;
@@ -167,6 +168,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         [gameState.beatenOpponents]
     );
 
+    const startChampionshipValidation = useCallback(() => {
+        setGameState((prev) => ({
+            ...prev,
+            currentScreen: "championship-validation",
+        }));
+    }, []);
+
     const value: GameContextType = {
         gameState,
         setScreen,
@@ -177,6 +185,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         resetSliders,
         unlockNextOpponent,
         goToNextOpponent,
+        startChampionshipValidation,
         getAthlete,
         getOpponent,
         getCurrentAthlete,

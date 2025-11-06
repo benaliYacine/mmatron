@@ -7,9 +7,11 @@ import { ChooseAthleteScreen } from "@/components/screens/choose-athlete-screen"
 import { OpponentPathScreen } from "@/components/screens/opponent-path-screen";
 import { TrainingRoomScreen } from "@/components/screens/training-room-screen";
 import { ResultOverlay } from "@/components/screens/result-overlay";
+import { ChampionshipValidationScreen } from "@/components/screens/championship-validation-screen";
 import { EndScreen } from "@/components/screens/end-screen";
 import { GAME_CONFIG } from "@/lib/game-data";
 import { INITIAL_GAME_STATE } from "@/lib/game-types";
+import { validateChampionshipWeights } from "@/lib/game-logic";
 
 function GameContent() {
     const {
@@ -26,6 +28,7 @@ function GameContent() {
         isOpponentBeaten,
         getOpponent,
         goToNextOpponent,
+        startChampionshipValidation,
     } = useGame();
 
     // Navigation handlers
@@ -78,6 +81,22 @@ function GameContent() {
         }
     };
     const handleEndScreen = () => {
+        setScreen("end-screen");
+    };
+
+    const handleChampionshipValidation = () => {
+        startChampionshipValidation();
+    };
+
+    const handleAdjustTraining = () => {
+        // Go back to the last opponent (opponent 6) to adjust training
+        const lastOpponentId = GAME_CONFIG.opponents.length;
+        selectOpponent(lastOpponentId);
+        setScreen("training-room");
+    };
+
+    const handleValidationContinue = () => {
+        // After successful validation, go to end screen
         setScreen("end-screen");
     };
     const handleRestart = () => {
@@ -226,6 +245,7 @@ function GameContent() {
                     onNextOpponent={handleNextOpponent}
                     onBackToPath={handleBackToPath}
                     onEndScreen={handleEndScreen}
+                    onChampionshipValidation={handleChampionshipValidation}
                     hasNextOpponent={hasNextOpponent}
                     allOpponentsBeaten={
                         gameState.lastFightResult?.won &&
@@ -236,6 +256,37 @@ function GameContent() {
                     }
                 />
             </>
+        );
+    }
+
+    if (gameState.currentScreen === "championship-validation") {
+        const athlete = getCurrentAthlete();
+        if (!athlete) {
+            return (
+                <div className="flex min-h-screen items-center justify-center">
+                    <p className="text-muted-foreground">
+                        Error: Athlete not selected
+                    </p>
+                </div>
+            );
+        }
+
+        // Calculate validation results
+        const validation = validateChampionshipWeights(
+            athlete,
+            GAME_CONFIG.opponents,
+            gameState.sliderState,
+            GAME_CONFIG.time_budget
+        );
+
+        return (
+            <ChampionshipValidationScreen
+                athlete={athlete}
+                opponents={GAME_CONFIG.opponents}
+                validation={validation}
+                onAdjustTraining={handleAdjustTraining}
+                onContinue={handleValidationContinue}
+            />
         );
     }
 

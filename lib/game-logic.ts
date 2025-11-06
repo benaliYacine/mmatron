@@ -6,6 +6,8 @@ import {
     TrainingStat,
     TRAINING_STATS,
     AdviceTip,
+    OpponentValidationResult,
+    ChampionshipValidation,
 } from "./game-types";
 
 /**
@@ -227,4 +229,81 @@ export function getMoodMessage(bias: number, athleteName: string): string {
     if (bias > 0.15) return `${athleteName} feels sharp today!`;
     if (bias < -0.1) return `${athleteName} seems a bit tired today.`;
     return `${athleteName} is ready to fight!`;
+}
+
+/**
+ * Calculate average bias for deterministic validation
+ * Uses the midpoint of the athlete's bias range
+ */
+function calculateAverageBias(athlete: Athlete): number {
+    const [minBias, maxBias] = athlete.bias_range;
+    return (minBias + maxBias) / 2;
+}
+
+/**
+ * Calculate fight score with deterministic bias (for validation)
+ */
+function calculateFightDeterministic(
+    athlete: Athlete,
+    opponent: Opponent,
+    sliders: SliderState,
+    timeBudget: number
+): FightResult {
+    // Enforce time budget
+    const enforcedSliders = enforceTimeBudget(sliders, timeBudget);
+
+    // Calculate effective weights
+    const effectiveWeights = calculateEffectiveWeights(
+        athlete.weights,
+        opponent.stats
+    );
+
+    // Use average bias for deterministic validation
+    const bias = calculateAverageBias(athlete);
+
+    // Calculate score: sum(effective_w[i] * slider[i]) + bias
+    let score = bias;
+    for (const stat of TRAINING_STATS) {
+        score += effectiveWeights[stat] * enforcedSliders[stat];
+    }
+
+    return {
+        score,
+        won: score >= opponent.threshold,
+        bias_used: bias,
+        effective_weights: effectiveWeights,
+        threshold: opponent.threshold,
+    };
+}
+
+/**
+ * Validate championship weights against all opponents
+ * Tests if the current slider configuration (weights) can beat all opponents
+ */
+export function validateChampionshipWeights(
+    athlete: Athlete,
+    opponents: Opponent[],
+    sliders: SliderState,
+    timeBudget: number
+): ChampionshipValidation {
+    const results: OpponentValidationResult[] = opponents.map((opponent) => {
+        const result = calculateFightDeterministic(
+            athlete,
+            opponent,
+            sliders,
+            timeBudget
+        );
+        return {
+            opponent,
+            result,
+            passed: result.won,
+        };
+    });
+
+    const allPassed = results.every((r) => r.passed);
+
+    return {
+        results,
+        allPassed,
+    };
 }

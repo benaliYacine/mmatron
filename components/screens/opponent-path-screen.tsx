@@ -124,7 +124,7 @@ export function OpponentPathScreen({
                     })}
                 </div>
 
-                {allBeaten && (
+                {allBeaten ? (
                     <Card className="p-6 text-center border-primary">
                         <h3 className="text-2xl font-bold text-foreground mb-2">
                             🏆 All Opponents Defeated!
@@ -137,19 +137,19 @@ export function OpponentPathScreen({
                             See What You Learned
                         </Button>
                     </Card>
+                ) : (
+                    <div className="p-4 border-muted">
+                        <Button
+                            variant="outline"
+                            size="lg"
+                            onClick={onEndScreen}
+                            className="w-full"
+                        >
+                            📚 What you'll Learn
+                        </Button>
+                    </div>
                 )}
 
-                {/* Always show access to educational content */}
-                <div className="p-4 border-muted">
-                    <Button
-                        variant="outline"
-                        size="lg"
-                        onClick={onEndScreen}
-                        className="w-full"
-                    >
-                        📚 What you'll Learn
-                    </Button>
-                </div>
             </div>
         </div>
     );

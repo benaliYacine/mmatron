@@ -19,6 +19,7 @@ interface ResultOverlayProps {
     onNextOpponent: () => void;
     onBackToPath: () => void;
     onEndScreen: () => void;
+    onChampionshipValidation: () => void;
     hasNextOpponent: boolean;
     allOpponentsBeaten: boolean;
 }
@@ -32,6 +33,7 @@ export function ResultOverlay({
     onNextOpponent,
     onBackToPath,
     onEndScreen,
+    onChampionshipValidation,
     hasNextOpponent,
     allOpponentsBeaten,
 }: ResultOverlayProps) {
@@ -66,6 +68,7 @@ export function ResultOverlay({
                         onNextOpponent={onNextOpponent}
                         onBackToPath={onBackToPath}
                         onEndScreen={onEndScreen}
+                        onChampionshipValidation={onChampionshipValidation}
                         hasNextOpponent={hasNextOpponent}
                         allOpponentsBeaten={allOpponentsBeaten}
                     />
@@ -125,6 +128,7 @@ interface WinOverlayProps {
     onNextOpponent: () => void;
     onBackToPath: () => void;
     onEndScreen: () => void;
+    onChampionshipValidation: () => void;
     hasNextOpponent: boolean;
     allOpponentsBeaten: boolean;
 }
@@ -134,6 +138,7 @@ function WinOverlay({
     onNextOpponent,
     onBackToPath,
     onEndScreen,
+    onChampionshipValidation,
     hasNextOpponent,
     allOpponentsBeaten,
 }: WinOverlayProps) {
@@ -227,10 +232,10 @@ function WinOverlay({
                         {allOpponentsBeaten && (
                             <Button
                                 size="lg"
-                                onClick={onEndScreen}
+                                onClick={onChampionshipValidation}
                                 className="w-full"
                             >
-                                📚 See What You Learned
+                                🏆 Test Against All Opponents
                             </Button>
                         )}
                         <Button
