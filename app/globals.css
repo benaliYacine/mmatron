@@ -229,14 +229,14 @@ body {
     }
 }
 
-/* Reduce bold weight for Bangers font - it's naturally bold and only comes in one weight */
-.font-bold {
-    font-weight: 400;
+/* Righteous font is naturally bold and only comes in one weight */
+/* .font-bold {
+    font-weight: 500;
 }
 
 .font-semibold {
-    font-weight: 400;
-}
+    font-weight: 200;
+} */
 
 /* Cyan text with black border - pop art style */
 h1,

@@ -4,8 +4,22 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Athlete, STAT_INFO, TRAINING_STATS } from "@/lib/game-types";
+import {
+    Athlete,
+    STAT_INFO,
+    TRAINING_STATS,
+    TrainingStat,
+} from "@/lib/game-types";
 import Image from "next/image";
+import {
+    Dumbbell,
+    Swords,
+    Users,
+    Shield,
+    Target,
+    Brain,
+    Moon,
+} from "lucide-react";
 
 interface ChooseAthleteScreenProps {
     athletes: Athlete[];
@@ -47,6 +61,28 @@ interface AthleteCardProps {
     onSelect: (athleteId: string) => void;
 }
 
+function getStatIcon(stat: TrainingStat) {
+    const iconClass = "h-4 w-4";
+    switch (stat) {
+        case "conditioning":
+            return <Dumbbell className={iconClass} />;
+        case "striking":
+            return <Swords className={iconClass} />;
+        case "wrestling":
+            return <Users className={iconClass} />;
+        case "bjj":
+            return <Shield className={iconClass} />;
+        case "muay_thai":
+            return <Target className={iconClass} />;
+        case "tactical":
+            return <Brain className={iconClass} />;
+        case "recovery":
+            return <Moon className={iconClass} />;
+        default:
+            return null;
+    }
+}
+
 function AthleteCard({ athlete, onSelect }: AthleteCardProps) {
     // Find max weight for normalization
     const maxWeight = Math.max(...Object.values(athlete.weights));
@@ -86,8 +122,8 @@ function AthleteCard({ athlete, onSelect }: AthleteCardProps) {
                     return (
                         <div key={stat} className="space-y-1">
                             <div className="flex items-center justify-between text-sm">
-                                <span className="text-muted-foreground">
-                                    {STAT_INFO[stat].emoji}{" "}
+                                <span className="text-muted-foreground flex items-center gap-2">
+                                    {getStatIcon(stat)}
                                     {STAT_INFO[stat].label}
                                 </span>
                             </div>

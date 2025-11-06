@@ -7,7 +7,7 @@ import { FightResult, SliderState, Opponent } from "@/lib/game-types";
 import { generateAdvice } from "@/lib/game-logic";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, CloudRain } from "lucide-react";
+import { Sparkles, CloudRain, Trophy, Lightbulb } from "lucide-react";
 import { LottieAnimation } from "@/components/ui/lottie-animation";
 
 interface ResultOverlayProps {
@@ -203,14 +203,19 @@ function WinOverlay({
                             WIN!
                         </motion.h2>
                         <motion.p
-                            className="text-lg text-muted-foreground"
+                            className="text-lg text-muted-foreground flex items-center justify-center gap-2"
                             initial={{ y: -20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.3 }}
                         >
-                            {allOpponentsBeaten
-                                ? "You defeated the final boss! 🎉"
-                                : "Excellent training strategy!"}
+                            {allOpponentsBeaten ? (
+                                <>
+                                    You defeated the final boss!{" "}
+                                    <Sparkles className="h-5 w-5" />
+                                </>
+                            ) : (
+                                "Excellent training strategy!"
+                            )}
                         </motion.p>
                     </div>
 
@@ -233,9 +238,10 @@ function WinOverlay({
                             <Button
                                 size="lg"
                                 onClick={onChampionshipValidation}
-                                className="w-full"
+                                className="w-full gap-2"
                             >
-                                🏆 Test Against All Opponents
+                                <Trophy className="h-5 w-5" />
+                                Test Against All Opponents
                             </Button>
                         )}
                         <Button
@@ -326,8 +332,9 @@ function LossOverlay({
                             transition={{ duration: 0.4 }}
                         >
                             <div className="flex items-center gap-2 mb-2">
-                                <Badge variant="secondary">
-                                    💡 Coach&apos;s Advice
+                                <Badge variant="secondary" className="gap-1">
+                                    <Lightbulb className="h-3 w-3" />
+                                    Coach&apos;s Advice
                                 </Badge>
                             </div>
                             <motion.p

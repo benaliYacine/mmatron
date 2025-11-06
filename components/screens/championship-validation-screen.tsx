@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ChampionshipValidation, Opponent, Athlete } from "@/lib/game-types";
-import { Check, X, Loader2 } from "lucide-react";
+import { Check, X, Loader2, AlertTriangle } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -57,9 +57,11 @@ export function ChampionshipValidationScreen({
             <Card className="p-12 max-w-5xl w-full space-y-8">
                 {/* Header */}
                 <div className="text-center space-y-3">
-                    <h2 className="text-5xl font-bold text-foreground">
-                        🏆 Championship Test
-                    </h2>
+                    <div className="flex items-center justify-center gap-3">
+                        <h2 className="text-5xl font-bold text-foreground">
+                            Championship Test
+                        </h2>
+                    </div>
                     <p className="text-xl text-muted-foreground">
                         Testing if your training weights work for{" "}
                         <strong className="text-foreground">ALL</strong>{" "}
@@ -158,49 +160,15 @@ export function ChampionshipValidationScreen({
                             }`}
                         >
                             {validation.allPassed ? (
-                                <>
-                                    <motion.div
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1 }}
-                                        transition={{
-                                            type: "spring",
-                                            stiffness: 200,
-                                        }}
-                                        className="mb-4"
-                                    >
-                                        <div className="w-32 h-32 mx-auto">
-                                            <LottieAnimation
-                                                src="https://lottie.host/60e70a4f-9c77-4cdb-88da-5469aaa078cd/PL54NuzKx4.lottie"
-                                                className="w-32 h-32"
-                                                loop={false}
-                                                autoplay={true}
-                                            />
-                                        </div>
-                                    </motion.div>
-                                    <h3 className="text-3xl font-bold text-foreground mb-2">
-                                        🎉 Perfect! All Tests Passed!
-                                    </h3>
-                                    <p className="text-lg text-muted-foreground mb-4">
-                                        Your training weights work for{" "}
-                                        <strong className="text-foreground">
-                                            all 6 opponents
-                                        </strong>
-                                        . You&apos;ve found weights that
-                                        generalize!
-                                    </p>
-                                    <Button
-                                        size="lg"
-                                        onClick={onContinue}
-                                        className="gap-2"
-                                    >
-                                        Continue to Learn More →
-                                    </Button>
-                                </>
+                                <SuccessSummary onContinue={onContinue} />
                             ) : (
                                 <>
-                                    <h3 className="text-3xl font-bold text-destructive mb-2">
-                                        ⚠️ Some Tests Failed
-                                    </h3>
+                                    <div className="flex items-center justify-center gap-2 mb-2">
+                                        <AlertTriangle className="h-8 w-8 text-destructive" />
+                                        <h3 className="text-3xl font-bold text-destructive">
+                                            Some Tests Failed
+                                        </h3>
+                                    </div>
                                     <p className="text-lg text-muted-foreground mb-4">
                                         Your current weights don&apos;t work for
                                         all opponents. This means they
@@ -240,6 +208,61 @@ export function ChampionshipValidationScreen({
                 )}
             </Card>
         </div>
+    );
+}
+
+interface SuccessSummaryProps {
+    onContinue: () => void;
+}
+
+function SuccessSummary({ onContinue }: SuccessSummaryProps) {
+    const [shouldPlayAnimation, setShouldPlayAnimation] = useState(false);
+
+    // Delay animation until after card scale animation completes
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShouldPlayAnimation(true);
+        }, 400); // Wait for card animation (spring animation ~300ms) + buffer
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    return (
+        <>
+            <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{
+                    type: "spring",
+                    stiffness: 200,
+                }}
+                className="mb-4"
+            >
+                <div className="w-32 h-32 mx-auto">
+                    {shouldPlayAnimation && (
+                        <LottieAnimation
+                            src="https://lottie.host/6057d8f0-6745-4224-8511-65c899cba353/hTIvvxT3Xc.lottie"
+                            className="w-32 h-32"
+                            loop={false}
+                            autoplay={true}
+                        />
+                    )}
+                </div>
+            </motion.div>
+            <div className="flex items-center justify-center gap-2 mb-2">
+                <h3 className="text-3xl font-bold text-foreground">
+                    Perfect! All Tests Passed!
+                </h3>
+            </div>
+            <p className="text-lg text-muted-foreground mb-4">
+                Your training weights work for{" "}
+                <strong className="text-foreground">all 6 opponents</strong>.
+                You&apos;ve found weights that generalize!
+            </p>
+            <Button size="lg" onClick={onContinue} className="gap-2">
+                Continue to Learn More →
+            </Button>
+        </>
     );
 }
 

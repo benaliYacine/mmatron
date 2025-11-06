@@ -4,7 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Opponent } from "@/lib/game-types";
-import { Check, Lock, Menu, BookOpen, UserCog, RotateCcw } from "lucide-react";
+import {
+    Check,
+    Lock,
+    Menu,
+    BookOpen,
+    UserCog,
+    RotateCcw,
+    Trophy,
+} from "lucide-react";
 import Image from "next/image";
 import {
     Tooltip,
@@ -148,9 +156,12 @@ export function OpponentPathScreen({
 
                 {allBeaten ? (
                     <Card className="p-6 text-center border-primary">
-                        <h3 className="text-2xl font-bold text-foreground mb-2">
-                            🏆 All Opponents Defeated!
-                        </h3>
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                            <Trophy className="h-6 w-6 text-primary" />
+                            <h3 className="text-2xl font-bold text-foreground">
+                                All Opponents Defeated!
+                            </h3>
+                        </div>
                         <p className="text-muted-foreground mb-4">
                             You&apos;ve mastered the fundamentals. Ready to
                             learn what happened?

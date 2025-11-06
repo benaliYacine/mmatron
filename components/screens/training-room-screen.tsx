@@ -21,7 +21,23 @@ import {
     getMoodMessage,
 } from "@/lib/game-logic";
 import { useState, useEffect } from "react";
-import { ArrowLeft, RotateCcw, Sparkles, CloudOff } from "lucide-react";
+import {
+    ArrowLeft,
+    RotateCcw,
+    Sparkles,
+    CloudOff,
+    Dumbbell,
+    Swords,
+    Users,
+    Shield,
+    Target,
+    Brain,
+    Moon,
+    AlertCircle,
+    CheckCircle2,
+    XCircle,
+    Lightbulb,
+} from "lucide-react";
 import {
     Tooltip,
     TooltipContent,
@@ -363,19 +379,22 @@ export function TrainingRoomScreen({
                                             <p className="font-semibold">
                                                 Mood States:
                                             </p>
-                                            <p className="text-primary">
-                                                🟢 Sharp (&gt; 0.15): Extra
-                                                boost!
+                                            <p className="text-primary flex items-center gap-1">
+                                                <CheckCircle2 className="h-3 w-3" />
+                                                Sharp (&gt; 0.15): Extra boost!
                                             </p>
-                                            <p className="text-chart-3">
-                                                🟡 Ready (-0.1 to 0.15): Normal
+                                            <p className="text-chart-3 flex items-center gap-1">
+                                                <AlertCircle className="h-3 w-3" />
+                                                Ready (-0.1 to 0.15): Normal
                                             </p>
-                                            <p className="text-destructive">
-                                                🔴 Tired (&lt; -0.1): Penalty
+                                            <p className="text-destructive flex items-center gap-1">
+                                                <XCircle className="h-3 w-3" />
+                                                Tired (&lt; -0.1): Penalty
                                             </p>
                                         </div>
-                                        <p className="text-xs text-muted-foreground pt-2 border-t">
-                                            💡 Mood changes each fight, adding
+                                        <p className="text-xs text-muted-foreground pt-2 border-t flex items-center gap-1">
+                                            <Lightbulb className="h-3 w-3" />
+                                            Mood changes each fight, adding
                                             variability to results!
                                         </p>
                                     </div>
@@ -409,8 +428,8 @@ export function TrainingRoomScreen({
                                     return (
                                         <div key={stat} className="space-y-1">
                                             <div className="flex items-center justify-between text-sm">
-                                                <span className="text-foreground">
-                                                    {STAT_INFO[stat].emoji}{" "}
+                                                <span className="text-foreground flex items-center gap-2">
+                                                    {getStatIcon(stat)}
                                                     {STAT_INFO[stat].label}
                                                 </span>
                                             </div>
@@ -445,8 +464,8 @@ export function TrainingRoomScreen({
                                     return (
                                         <div key={stat} className="space-y-1">
                                             <div className="flex items-center justify-between text-sm">
-                                                <span className="text-foreground">
-                                                    {STAT_INFO[stat].emoji}{" "}
+                                                <span className="text-foreground flex items-center gap-2">
+                                                    {getStatIcon(stat)}
                                                     {STAT_INFO[stat].label}
                                                 </span>
                                                 {isStrength && (
@@ -489,9 +508,10 @@ export function TrainingRoomScreen({
                     <Button
                         size="lg"
                         onClick={onFight}
-                        className="text-lg px-12 py-6"
+                        className="text-lg px-12 py-6 gap-2"
                     >
-                        Fight! 🥊
+                        <Swords className="h-5 w-5" />
+                        Fight!
                     </Button>
                     {hasNextOpponent && onNextOpponent ? (
                         <Button
@@ -524,12 +544,35 @@ interface TrainingSliderProps {
     onChange: (value: number) => void;
 }
 
+function getStatIcon(stat: TrainingStat) {
+    const iconClass = "h-4 w-4";
+    switch (stat) {
+        case "conditioning":
+            return <Dumbbell className={iconClass} />;
+        case "striking":
+            return <Swords className={iconClass} />;
+        case "wrestling":
+            return <Users className={iconClass} />;
+        case "bjj":
+            return <Shield className={iconClass} />;
+        case "muay_thai":
+            return <Target className={iconClass} />;
+        case "tactical":
+            return <Brain className={iconClass} />;
+        case "recovery":
+            return <Moon className={iconClass} />;
+        default:
+            return null;
+    }
+}
+
 function TrainingSlider({ stat, value, onChange }: TrainingSliderProps) {
     return (
         <div className="space-y-2">
             <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-foreground">
-                    {STAT_INFO[stat].emoji} {STAT_INFO[stat].label}
+                <label className="text-sm font-medium text-foreground flex items-center gap-2">
+                    {getStatIcon(stat)}
+                    {STAT_INFO[stat].label}
                 </label>
                 <Badge variant="secondary" className="text-sm">
                     {value}

@@ -1,9 +1,67 @@
 import type { Metadata } from "next";
-import { Bangers, Space_Mono } from "next/font/google";
+import {
+    Righteous,
+    Bungee,
+    Bungee_Shade,
+    Luckiest_Guy,
+    Black_Ops_One,
+    Orbitron,
+    Audiowide,
+    Space_Mono,
+} from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
-const bangers = Bangers({
+// Pop art font options - uncomment the one you want to use
+// const font = Righteous({
+//     subsets: ["latin"],
+//     weight: "400",
+//     variable: "--font-sans",
+//     fallback: ["Impact", "Arial Black", "Arial", "sans-serif"],
+//     display: "swap",
+// });
+
+// const font = Bungee({
+//     subsets: ["latin"],
+//     weight: "400",
+//     variable: "--font-sans",
+//     fallback: ["Impact", "Arial Black", "Arial", "sans-serif"],
+//     display: "swap",
+// });
+
+// const font = Bungee_Shade({
+//     subsets: ["latin"],
+//     weight: "400",
+//     variable: "--font-sans",
+//     fallback: ["Impact", "Arial Black", "Arial", "sans-serif"],
+//     display: "swap",
+// });
+
+// const font = Luckiest_Guy({
+//     subsets: ["latin"],
+//     weight: "400",
+//     variable: "--font-sans",
+//     fallback: ["Impact", "Arial Black", "Arial", "sans-serif"],
+//     display: "swap",
+// });
+
+// const font = Black_Ops_One({
+//     subsets: ["latin"],
+//     weight: "400",
+//     variable: "--font-sans",
+//     fallback: ["Impact", "Arial Black", "Arial", "sans-serif"],
+//     display: "swap",
+// });
+
+// const font = Orbitron({
+//     subsets: ["latin"],
+//     weight: ["400", "700", "900"],
+//     variable: "--font-sans",
+//     fallback: ["Impact", "Arial Black", "Arial", "sans-serif"],
+//     display: "swap",
+// });
+
+const font = Audiowide({
     subsets: ["latin"],
     weight: "400",
     variable: "--font-sans",
@@ -42,7 +100,7 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body
-                className={`${bangers.variable} ${spaceMono.variable} font-sans antialiased`}
+                className={`${font.variable} ${spaceMono.variable} font-sans antialiased`}
             >
                 <ThemeProvider
                     attribute="class"

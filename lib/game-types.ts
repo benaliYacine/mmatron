@@ -22,13 +22,13 @@ export const TRAINING_STATS: TrainingStat[] = [
 // Stat display info
 export const STAT_INFO: Record<TrainingStat, { emoji: string; label: string }> =
     {
-        conditioning: { emoji: "💪", label: "Conditioning" },
-        striking: { emoji: "🥊", label: "Striking" },
-        wrestling: { emoji: "🤼", label: "Wrestling" },
-        bjj: { emoji: "🥋", label: "BJJ" },
-        muay_thai: { emoji: "🥊", label: "Muay Thai" },
-        tactical: { emoji: "🧠", label: "Tactical" },
-        recovery: { emoji: "😴", label: "Recovery" },
+        conditioning: { emoji: "", label: "Conditioning" },
+        striking: { emoji: "", label: "Striking" },
+        wrestling: { emoji: "", label: "Wrestling" },
+        bjj: { emoji: "", label: "BJJ" },
+        muay_thai: { emoji: "", label: "Muay Thai" },
+        tactical: { emoji: "", label: "Tactical" },
+        recovery: { emoji: "", label: "Recovery" },
     };
 
 // Slider state (0-10 for each stat)

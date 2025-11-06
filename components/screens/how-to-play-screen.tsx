@@ -85,13 +85,13 @@ export function HowToPlayScreen({ onContinue, onBack }: HowToPlayScreenProps) {
                                         to split between 7 skills:
                                     </p>
                                     <div className="flex flex-wrap gap-2 mt-2">
-                                        <Badge>💪 Conditioning</Badge>
-                                        <Badge>🥊 Striking</Badge>
-                                        <Badge>🤼 Wrestling</Badge>
-                                        <Badge>🥋 BJJ</Badge>
-                                        <Badge>🥊 Muay Thai</Badge>
-                                        <Badge>🧠 Tactical</Badge>
-                                        <Badge>😴 Recovery</Badge>
+                                        <Badge>Conditioning</Badge>
+                                        <Badge>Striking</Badge>
+                                        <Badge>Wrestling</Badge>
+                                        <Badge>BJJ</Badge>
+                                        <Badge>Muay Thai</Badge>
+                                        <Badge>Tactical</Badge>
+                                        <Badge>Recovery</Badge>
                                     </div>
                                 </div>
                             </div>
@@ -105,7 +105,7 @@ export function HowToPlayScreen({ onContinue, onBack }: HowToPlayScreenProps) {
                                 </div>
                                 <div className="flex-1 space-y-2">
                                     <h3 className="text-xl font-semibold text-foreground">
-                                        ⚠️ The Big Challenge
+                                        The Big Challenge
                                     </h3>
                                     <p className="text-muted-foreground">
                                         <strong className="text-destructive">
@@ -143,7 +143,7 @@ export function HowToPlayScreen({ onContinue, onBack }: HowToPlayScreenProps) {
                                     <div className="space-y-3">
                                         <div className="p-4 bg-background rounded-lg border-2 border-primary">
                                             <p className="font-semibold text-foreground mb-1">
-                                                ✅ If your athlete is good at
+                                                If your athlete is good at
                                                 something:
                                             </p>
                                             <p className="text-sm text-muted-foreground">
@@ -157,7 +157,7 @@ export function HowToPlayScreen({ onContinue, onBack }: HowToPlayScreenProps) {
 
                                         <div className="p-4 bg-background rounded-lg border-2 border-destructive">
                                             <p className="font-semibold text-foreground mb-1">
-                                                ⚔️ If your opponent is good at
+                                                If your opponent is good at
                                                 something:
                                             </p>
                                             <p className="text-sm text-muted-foreground">
@@ -171,7 +171,7 @@ export function HowToPlayScreen({ onContinue, onBack }: HowToPlayScreenProps) {
 
                                         <div className="p-4 bg-background rounded-lg border-2 border-chart-3">
                                             <p className="font-semibold text-foreground mb-1">
-                                                💡 The Secret Formula:
+                                                The Secret Formula:
                                             </p>
                                             <p className="text-sm text-muted-foreground">
                                                 The game combines your
