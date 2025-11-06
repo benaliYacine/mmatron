@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Opponent } from "@/lib/game-types";
-import { Check, Lock } from "lucide-react";
+import { Check, Lock, Menu, BookOpen, UserCog, RotateCcw } from "lucide-react";
 import Image from "next/image";
 import {
     Tooltip,
@@ -23,6 +23,13 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface OpponentPathScreenProps {
     opponents: Opponent[];
@@ -56,7 +63,7 @@ export function OpponentPathScreen({
                 backgroundImage: `url('/background.svg')`,
             }}
         >
-            <div className="flex flex-col items-center gap-8 max-w-6xl w-full">
+            <div className="flex flex-col items-center gap-4 max-w-6xl w-full">
                 <div className="text-center">
                     <h2 className="text-4xl font-bold text-foreground mb-2">
                         Opponent Path
@@ -66,43 +73,58 @@ export function OpponentPathScreen({
                     </p>
                 </div>
 
-                {/* Action Buttons Row */}
-                <div className="flex flex-wrap justify-center gap-3 w-full">
-                    <Button variant="outline" size="sm" onClick={onHowToPlay}>
-                        📖 How to Play
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={onChangeAthlete}
-                    >
-                        🔄 Change Athlete
-                    </Button>
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
+                {/* Action Menu */}
+                <div className="flex justify-end w-full">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="sm">
-                                🔁 Restart Game
+                                <Menu className="h-4 w-4 mr-2" />
+                                Menu
                             </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                    Restart Game?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    This will reset all your progress, including
-                                    unlocked opponents and victories. Are you
-                                    sure you want to restart?
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={onRestart}>
-                                    Restart
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="center">
+                            <DropdownMenuItem onClick={onHowToPlay}>
+                                <BookOpen className="h-4 w-4 mr-2" />
+                                How to Play
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={onChangeAthlete}>
+                                <UserCog className="h-4 w-4 mr-2" />
+                                Change Athlete
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem
+                                        onSelect={(e) => e.preventDefault()}
+                                    >
+                                        <RotateCcw className="h-4 w-4 mr-2" />
+                                        Restart Game
+                                    </DropdownMenuItem>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                            Restart Game?
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This will reset all your progress,
+                                            including unlocked opponents and
+                                            victories. Are you sure you want to
+                                            restart?
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>
+                                            Cancel
+                                        </AlertDialogCancel>
+                                        <AlertDialogAction onClick={onRestart}>
+                                            Restart
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full">
@@ -138,18 +160,8 @@ export function OpponentPathScreen({
                         </Button>
                     </Card>
                 ) : (
-                    <div className="p-4 border-muted">
-                        <Button
-                            variant="outline"
-                            size="lg"
-                            onClick={onEndScreen}
-                            className="w-full"
-                        >
-                            📚 What you'll Learn
-                        </Button>
-                    </div>
+                    <></>
                 )}
-
             </div>
         </div>
     );
