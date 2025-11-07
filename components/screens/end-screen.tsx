@@ -88,8 +88,8 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Weights */}
                         <Card className="p-0 border-primary overflow-hidden">
-                            <div className="p-6 space-y-4 relative bg-background">
-                                <div className="absolute inset-0 bg-primary/5"></div>
+                            <div className="p-6 space-y-4 relative bg-background h-full">
+                                <div className="absolute inset-0 bg-primary/5 h-full"></div>
                                 <div className="relative z-10 space-y-4">
                                     <Badge variant="default" className="w-fit">
                                         1. Weights
@@ -124,8 +124,8 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
 
                         {/* Inputs */}
                         <Card className="p-0 border-primary overflow-hidden">
-                            <div className="p-6 space-y-4 relative bg-background">
-                                <div className="absolute inset-0 bg-primary/5"></div>
+                            <div className="p-6 space-y-4 relative bg-background h-full">
+                                <div className="absolute inset-0 bg-primary/5 h-full"></div>
                                 <div className="relative z-10 space-y-4">
                                     <Badge variant="default" className="w-fit">
                                         2. Inputs
@@ -159,8 +159,8 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
 
                         {/* Output */}
                         <Card className="p-0 border-primary overflow-hidden">
-                            <div className="p-6 space-y-4 relative bg-background">
-                                <div className="absolute inset-0 bg-primary/5"></div>
+                            <div className="p-6 space-y-4 relative bg-background h-full">
+                                <div className="absolute inset-0 bg-primary/5 h-full"></div>
                                 <div className="relative z-10 space-y-4">
                                     <Badge variant="default" className="w-fit">
                                         3. Output

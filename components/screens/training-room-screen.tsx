@@ -322,28 +322,31 @@ export function TrainingRoomScreen({
                                         </p>
                                         <div className="text-xs space-y-1">
                                             <p>
-                                                <strong>
-                                                    Talent Range (Fixed):
-                                                </strong>{" "}
-                                                {athlete.bias_range[0]} to{" "}
-                                                {athlete.bias_range[1]}
-                                            </p>
-                                            <p className="text-muted-foreground italic">
-                                                Talent is fixed when you select
-                                                an athlete
+                                                Each athlete has a{" "}
+                                                <strong>fixed talent</strong>{" "}
+                                                value that never changes. This
+                                                represents their natural
+                                                ability.
                                             </p>
                                             <p>
-                                                <strong>
-                                                    Daily Mood Range:
-                                                </strong>{" "}
-                                                -0.15 to +0.15
+                                                Each fight, a{" "}
+                                                <strong>daily mood</strong>{" "}
+                                                variation is randomly applied
+                                                (ranging from -0.15 to +0.15).
+                                                This represents day-to-day
+                                                mental/physical state.
                                             </p>
-                                            <p className="pt-1 text-muted-foreground">
-                                                Final = Fixed Talent + Daily
-                                                Mood
+                                            <p className="pt-1 font-semibold text-foreground">
+                                                Total Bias = Fixed Talent +
+                                                Daily Mood
+                                            </p>
+                                            <p className="text-muted-foreground italic text-xs">
+                                                The total bias is added to your
+                                                fight score, affecting whether
+                                                you win or lose.
                                             </p>
                                         </div>
-                                        <div className="text-xs space-y-1 pt-2 border-t bg-muted/50 p-2 rounded">
+                                        <div className="text-xs space-y-1 pt-2 border-t bg-muted/15 p-2 rounded">
                                             <p className="font-semibold">
                                                 Current Values:
                                             </p>
