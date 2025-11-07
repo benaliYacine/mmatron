@@ -267,14 +267,14 @@ export function TrainingRoomScreen({
                             )}
                         </div>
 
-                        {/* Athlete Bias Indicator */}
+                        {/* Athlete Performance Indicator */}
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <div className="space-y-2 pt-4 border-t cursor-help">
                                         <div className="flex items-center justify-between">
                                             <span className="text-sm font-semibold text-foreground">
-                                                Total Bias
+                                                Performance Boost
                                             </span>
                                             <span
                                                 className={`text-sm font-bold ${
@@ -318,7 +318,7 @@ export function TrainingRoomScreen({
                                 <TooltipContent className="max-w-xs">
                                     <div className="space-y-2">
                                         <p className="font-semibold text-sm">
-                                            How Bias Works:
+                                            How Performance Boost Works:
                                         </p>
                                         <div className="text-xs space-y-1">
                                             <p>
@@ -337,13 +337,13 @@ export function TrainingRoomScreen({
                                                 mental/physical state.
                                             </p>
                                             <p className="pt-1 font-semibold text-foreground">
-                                                Total Bias = Fixed Talent +
-                                                Daily Mood
+                                                Performance Boost = Fixed Talent
+                                                + Daily Mood
                                             </p>
                                             <p className="text-muted-foreground italic text-xs">
-                                                The total bias is added to your
-                                                fight score, affecting whether
-                                                you win or lose.
+                                                The performance boost is added
+                                                to your fight score, affecting
+                                                whether you win or lose.
                                             </p>
                                         </div>
                                         <div className="text-xs space-y-1 pt-2 border-t bg-muted/15 p-2 rounded">
@@ -363,7 +363,9 @@ export function TrainingRoomScreen({
                                                 {moodVariation.toFixed(3)}
                                             </p>
                                             <p className="pt-1 border-t">
-                                                <strong>Final Bias:</strong>{" "}
+                                                <strong>
+                                                    Total Performance Boost:
+                                                </strong>{" "}
                                                 <span
                                                     className={
                                                         currentBias > 0.15
