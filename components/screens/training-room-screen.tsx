@@ -15,11 +15,7 @@ import {
     TrainingStat,
     DEFAULT_SLIDER_STATE,
 } from "@/lib/game-types";
-import {
-    getTimeBudgetStatus,
-    calculateBias,
-    getMoodMessage,
-} from "@/lib/game-logic";
+import { getTimeBudgetStatus, getMoodMessage } from "@/lib/game-logic";
 import { useState, useEffect } from "react";
 import {
     ArrowLeft,
@@ -50,6 +46,7 @@ interface TrainingRoomScreenProps {
     opponent: Opponent;
     sliders: SliderState;
     timeBudget: number;
+    fixedTalent: number;
     onUpdateSliders: (sliders: SliderState) => void;
     onFight: () => void;
     onReset: () => void;
@@ -63,6 +60,7 @@ export function TrainingRoomScreen({
     opponent,
     sliders,
     timeBudget,
+    fixedTalent,
     onUpdateSliders,
     onFight,
     onReset,
@@ -75,23 +73,19 @@ export function TrainingRoomScreen({
 
     // Calculate current mood/bias for display
     const [currentBias, setCurrentBias] = useState<number>(0);
-    const [baseTalent, setBaseTalent] = useState<number>(0);
     const [moodVariation, setMoodVariation] = useState<number>(0);
     const [moodMessage, setMoodMessage] = useState<string>("");
 
-    // Update mood when component mounts, athlete changes, or opponent changes
+    // Update mood when opponent changes (talent is fixed, only mood varies)
     useEffect(() => {
-        // Calculate base talent and mood variation separately
-        const [minBias, maxBias] = athlete.bias_range;
-        const talent = minBias + Math.random() * (maxBias - minBias);
+        // Only randomize mood variation (talent is fixed per athlete)
         const mood = -0.15 + Math.random() * 0.3; // -0.15 to +0.15
-        const totalBias = talent + mood;
+        const totalBias = fixedTalent + mood;
 
-        setBaseTalent(talent);
         setMoodVariation(mood);
         setCurrentBias(totalBias);
         setMoodMessage(getMoodMessage(totalBias, athlete.name));
-    }, [athlete, opponent]);
+    }, [opponent, fixedTalent, athlete.name]);
 
     // Get mood icon and color based on bias
     const getMoodIndicator = () => {
@@ -273,14 +267,14 @@ export function TrainingRoomScreen({
                             )}
                         </div>
 
-                        {/* Athlete Mood/Bias Indicator */}
+                        {/* Athlete Bias Indicator */}
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <div className="space-y-2 pt-4 border-t cursor-help">
                                         <div className="flex items-center justify-between">
                                             <span className="text-sm font-semibold text-foreground">
-                                                Athlete Mood
+                                                Total Bias
                                             </span>
                                             <span
                                                 className={`text-sm font-bold ${
@@ -324,15 +318,19 @@ export function TrainingRoomScreen({
                                 <TooltipContent className="max-w-xs">
                                     <div className="space-y-2">
                                         <p className="font-semibold text-sm">
-                                            How Mood Works:
+                                            How Bias Works:
                                         </p>
                                         <div className="text-xs space-y-1">
                                             <p>
                                                 <strong>
-                                                    Base Talent Range:
+                                                    Talent Range (Fixed):
                                                 </strong>{" "}
                                                 {athlete.bias_range[0]} to{" "}
                                                 {athlete.bias_range[1]}
+                                            </p>
+                                            <p className="text-muted-foreground italic">
+                                                Talent is fixed when you select
+                                                an athlete
                                             </p>
                                             <p>
                                                 <strong>
@@ -341,7 +339,8 @@ export function TrainingRoomScreen({
                                                 -0.15 to +0.15
                                             </p>
                                             <p className="pt-1 text-muted-foreground">
-                                                Final = Base Talent + Daily Mood
+                                                Final = Fixed Talent + Daily
+                                                Mood
                                             </p>
                                         </div>
                                         <div className="text-xs space-y-1 pt-2 border-t bg-muted/50 p-2 rounded">
@@ -350,10 +349,10 @@ export function TrainingRoomScreen({
                                             </p>
                                             <p>
                                                 <strong>
-                                                    {athlete.name}&apos;s Talent
-                                                    Today:
+                                                    {athlete.name}&apos;s Fixed
+                                                    Talent:
                                                 </strong>{" "}
-                                                {baseTalent.toFixed(3)}
+                                                {fixedTalent.toFixed(3)}
                                             </p>
                                             <p>
                                                 <strong>Mood Variation:</strong>{" "}
@@ -394,7 +393,8 @@ export function TrainingRoomScreen({
                                         </div>
                                         <p className="text-xs text-muted-foreground pt-2 border-t flex items-center gap-1">
                                             <Lightbulb className="h-3 w-3" />
-                                            Mood changes each fight, adding
+                                            Talent is fixed per athlete, but
+                                            mood changes each fight, adding
                                             variability to results!
                                         </p>
                                     </div>
@@ -409,7 +409,7 @@ export function TrainingRoomScreen({
                         <Card className="p-6 space-y-4">
                             <div>
                                 <h3 className="text-xl font-bold text-foreground mb-1">
-                                    Born Strengths
+                                    Strengths
                                 </h3>
                                 <p className="text-sm text-muted-foreground">
                                     Your athlete&apos;s natural abilities

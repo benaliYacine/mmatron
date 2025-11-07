@@ -113,7 +113,7 @@ function AthleteCard({ athlete, onSelect }: AthleteCardProps) {
 
             <div className="space-y-3">
                 <p className="text-sm font-semibold text-foreground">
-                    Born Strengths:
+                    Strengths:
                 </p>
                 {TRAINING_STATS.map((stat) => {
                     const weight = athlete.weights[stat];
@@ -131,6 +131,22 @@ function AthleteCard({ athlete, onSelect }: AthleteCardProps) {
                         </div>
                     );
                 })}
+            </div>
+
+            {/* Fixed Talent */}
+            <div className="space-y-2 pt-2 border-t">
+
+                <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Talent:</span>
+                    <span className="text-foreground font-medium">
+                        {athlete.fixedTalent.toFixed(2)}
+                    </span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                    This athlete&apos;s talent value is fixed. Higher values
+                    give a better base bias for fights. Daily mood will still
+                    vary each fight.
+                </p>
             </div>
 
             <Button

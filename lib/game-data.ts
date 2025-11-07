@@ -18,6 +18,7 @@ export const GAME_CONFIG: GameConfig = {
                 recovery: 0.2,
             },
             bias_range: [-0.1, 0.2],
+            fixedTalent: 0.1, // fixed talent value (midpoint of range)
         },
         {
             id: "max_heavy",
@@ -34,6 +35,7 @@ export const GAME_CONFIG: GameConfig = {
                 recovery: 0.2,
             },
             bias_range: [-0.05, 0.15],
+            fixedTalent: 0.05, // fixed talent value (midpoint of range)
         },
     ],
     opponents: [

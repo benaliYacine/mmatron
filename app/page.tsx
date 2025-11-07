@@ -193,6 +193,7 @@ function GameContent() {
                 opponent={opponent}
                 sliders={gameState.sliderState}
                 timeBudget={GAME_CONFIG.time_budget}
+                fixedTalent={gameState.fixedTalent ?? 0}
                 onUpdateSliders={updateSliders}
                 onFight={handleFight}
                 onReset={resetSliders}
@@ -225,6 +226,7 @@ function GameContent() {
                             opponent={opponent}
                             sliders={gameState.sliderState}
                             timeBudget={GAME_CONFIG.time_budget}
+                            fixedTalent={gameState.fixedTalent ?? 0}
                             onUpdateSliders={updateSliders}
                             onFight={handleFight}
                             onReset={resetSliders}
@@ -271,12 +273,23 @@ function GameContent() {
             );
         }
 
+        if (gameState.fixedTalent === null) {
+            return (
+                <div className="flex min-h-screen items-center justify-center">
+                    <p className="text-muted-foreground">
+                        Error: Fixed talent not set
+                    </p>
+                </div>
+            );
+        }
+
         // Calculate validation results
         const validation = validateChampionshipWeights(
             athlete,
             GAME_CONFIG.opponents,
             gameState.sliderState,
-            GAME_CONFIG.time_budget
+            GAME_CONFIG.time_budget,
+            gameState.fixedTalent
         );
 
         return (

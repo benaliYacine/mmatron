@@ -10,6 +10,7 @@ import {
     Target,
     Lightbulb,
     CheckCircle2,
+    BadgeCheck,
 } from "lucide-react";
 
 interface EndScreenProps {
@@ -49,16 +50,8 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
 
                 {/* The Big Realization */}
                 <Card className="p-0 border-primary border-2 overflow-hidden">
-                    <div
-                        className="p-8 relative"
-                        style={{ backgroundColor: "hsl(var(--background))" }}
-                    >
-                        <div
-                            className="absolute inset-0"
-                            style={{
-                                backgroundColor: "hsl(var(--primary) / 0.1)",
-                            }}
-                        ></div>
+                    <div className="p-8 relative bg-background">
+                        <div className="absolute inset-0 bg-primary/10"></div>
                         <div className="relative z-10">
                             <div className="flex items-start gap-4">
                                 <Lightbulb className="h-8 w-8 text-primary shrink-0 mt-1" />
@@ -95,19 +88,8 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Weights */}
                         <Card className="p-0 border-primary overflow-hidden">
-                            <div
-                                className="p-6 space-y-4 relative"
-                                style={{
-                                    backgroundColor: "hsl(var(--background))",
-                                }}
-                            >
-                                <div
-                                    className="absolute inset-0"
-                                    style={{
-                                        backgroundColor:
-                                            "hsl(var(--primary) / 0.05)",
-                                    }}
-                                ></div>
+                            <div className="p-6 space-y-4 relative bg-background">
+                                <div className="absolute inset-0 bg-primary/5"></div>
                                 <div className="relative z-10 space-y-4">
                                     <Badge variant="default" className="w-fit">
                                         1. Weights
@@ -142,19 +124,8 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
 
                         {/* Inputs */}
                         <Card className="p-0 border-primary overflow-hidden">
-                            <div
-                                className="p-6 space-y-4 relative"
-                                style={{
-                                    backgroundColor: "hsl(var(--background))",
-                                }}
-                            >
-                                <div
-                                    className="absolute inset-0"
-                                    style={{
-                                        backgroundColor:
-                                            "hsl(var(--primary) / 0.05)",
-                                    }}
-                                ></div>
+                            <div className="p-6 space-y-4 relative bg-background">
+                                <div className="absolute inset-0 bg-primary/5"></div>
                                 <div className="relative z-10 space-y-4">
                                     <Badge variant="default" className="w-fit">
                                         2. Inputs
@@ -188,19 +159,8 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
 
                         {/* Output */}
                         <Card className="p-0 border-primary overflow-hidden">
-                            <div
-                                className="p-6 space-y-4 relative"
-                                style={{
-                                    backgroundColor: "hsl(var(--background))",
-                                }}
-                            >
-                                <div
-                                    className="absolute inset-0"
-                                    style={{
-                                        backgroundColor:
-                                            "hsl(var(--primary) / 0.05)",
-                                    }}
-                                ></div>
+                            <div className="p-6 space-y-4 relative bg-background">
+                                <div className="absolute inset-0 bg-primary/5"></div>
                                 <div className="relative z-10 space-y-4">
                                     <Badge variant="default" className="w-fit">
                                         3. Output
@@ -249,16 +209,8 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
 
                 {/* The Training Process */}
                 <Card className="p-0 overflow-hidden">
-                    <div
-                        className="p-8 relative"
-                        style={{ backgroundColor: "hsl(var(--background))" }}
-                    >
-                        <div
-                            className="absolute inset-0"
-                            style={{
-                                backgroundColor: "hsl(var(--secondary) / 0.5)",
-                            }}
-                        ></div>
+                    <div className="p-8 relative bg-background">
+                        <div className="absolute inset-0 bg-secondary/5"></div>
                         <div className="relative z-10">
                             <div className="flex items-start gap-4 mb-6">
                                 <Target className="h-8 w-8 text-primary shrink-0 mt-1" />
@@ -350,22 +302,14 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
 
                 {/* Key Concepts */}
                 <Card className="p-0 border-primary overflow-hidden">
-                    <div
-                        className="p-8 relative"
-                        style={{ backgroundColor: "hsl(var(--background))" }}
-                    >
-                        <div
-                            className="absolute inset-0"
-                            style={{
-                                backgroundColor: "hsl(var(--primary) / 0.05)",
-                            }}
-                        ></div>
+                    <div className="p-8 relative bg-background">
+                        <div className="absolute inset-0 bg-primary/5"></div>
                         <div className="relative z-10">
                             <h3 className="text-3xl font-bold text-foreground mb-6 text-center">
                                 Key Concepts You Learned
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="p-4 bg-background rounded-lg">
+                                <div className="p-4 bg-background rounded-lg border-primary border-2">
                                     <h4 className="font-bold text-foreground mb-2">
                                         Weights
                                     </h4>
@@ -375,7 +319,7 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                                         these with your sliders!
                                     </p>
                                 </div>
-                                <div className="p-4 bg-background rounded-lg">
+                                <div className="p-4 bg-background rounded-lg border-primary border-2">
                                     <h4 className="font-bold text-foreground mb-2">
                                         Inputs
                                     </h4>
@@ -385,7 +329,7 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                                         stats.
                                     </p>
                                 </div>
-                                <div className="p-4 bg-background rounded-lg">
+                                <div className="p-4 bg-background rounded-lg border-primary border-2">
                                     <h4 className="font-bold text-foreground mb-2">
                                         Bias
                                     </h4>
@@ -395,7 +339,7 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                                         mood were the bias!
                                     </p>
                                 </div>
-                                <div className="p-4 bg-background rounded-lg">
+                                <div className="p-4 bg-background rounded-lg border-primary border-2">
                                     <h4 className="font-bold text-foreground mb-2">
                                         Generalization
                                     </h4>
@@ -412,16 +356,8 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
 
                 {/* Real-World Connection */}
                 <Card className="p-0 overflow-hidden">
-                    <div
-                        className="p-8 relative"
-                        style={{ backgroundColor: "hsl(var(--background))" }}
-                    >
-                        <div
-                            className="absolute inset-0"
-                            style={{
-                                backgroundColor: "hsl(var(--muted) / 0.3)",
-                            }}
-                        ></div>
+                    <div className="p-8 relative bg-background">
+                        <div className="absolute inset-0 bg-muted/30"></div>
                         <div className="relative z-10">
                             <h3 className="text-3xl font-bold text-foreground mb-4 text-center">
                                 Real-World Connection
@@ -444,43 +380,38 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
 
                 {/* Summary */}
                 <Card className="p-0 border-primary border-2 overflow-hidden">
-                    <div
-                        className="p-8 relative"
-                        style={{ backgroundColor: "hsl(var(--background))" }}
-                    >
-                        <div
-                            className="absolute inset-0"
-                            style={{
-                                backgroundColor: "hsl(var(--primary) / 0.1)",
-                            }}
-                        ></div>
+                    <div className="p-8 relative bg-background">
+                        <div className="absolute inset-0 bg-primary/10"></div>
                         <div className="relative z-10">
                             <h3 className="text-2xl font-bold text-foreground mb-4 text-center">
                                 Summary
                             </h3>
                             <div className="space-y-3 text-lg text-muted-foreground">
-                                <p>
-                                    You{" "}
+                                <p className="flex items-center gap-2">
+                                    <BadgeCheck className="h-5 w-5 text-primary" /> You{" "}
                                     <strong className="text-foreground">
                                         found weights
                                     </strong>{" "}
                                     (training sliders) that worked
                                 </p>
-                                <p>
+                                <p className="flex items-center gap-2">
+                                    <BadgeCheck className="h-5 w-5 text-primary" />
                                     You{" "}
                                     <strong className="text-foreground">
                                         tested them
                                     </strong>{" "}
                                     against multiple examples (opponents)
                                 </p>
-                                <p>
+                                <p className="flex items-center gap-2">
+                                    <BadgeCheck className="h-5 w-5 text-primary" />
                                     You{" "}
                                     <strong className="text-foreground">
                                         adjusted them
                                     </strong>{" "}
                                     when they failed
                                 </p>
-                                <p>
+                                <p className="flex items-center gap-2">
+                                    <BadgeCheck className="h-5 w-5 text-primary" />
                                     You{" "}
                                     <strong className="text-primary">
                                         generalized

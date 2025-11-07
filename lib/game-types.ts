@@ -39,7 +39,8 @@ export interface Athlete {
     id: string;
     name: string;
     weights: Record<TrainingStat, number>; // base weights (0-1 range)
-    bias_range: [number, number]; // [min, max] for talent bias
+    bias_range: [number, number]; // [min, max] for talent bias (for display/reference)
+    fixedTalent: number; // fixed talent value for this athlete
     avatar?: string; // optional image path
     description?: string; // short description
 }
@@ -72,6 +73,7 @@ export interface GameState {
     beatenOpponents: number[]; // array of opponent IDs
     lastFightResult: FightResult | null;
     currentScreen: GameScreen;
+    fixedTalent: number | null; // fixed talent value for the selected athlete
 }
 
 // Game screens
@@ -130,4 +132,5 @@ export const INITIAL_GAME_STATE: GameState = {
     beatenOpponents: [],
     lastFightResult: null,
     currentScreen: "landing",
+    fixedTalent: null,
 };

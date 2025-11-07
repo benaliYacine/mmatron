@@ -223,7 +223,7 @@ export function HowToPlayScreen({ onContinue, onBack }: HowToPlayScreenProps) {
                                 </h3>
                                 <p className="text-muted-foreground">
                                     Each athlete has different natural
-                                    strengths. Check their &quot;Born
+                                    strengths. Check their &quot;
                                     Strengths&quot; panel!
                                 </p>
                             </div>

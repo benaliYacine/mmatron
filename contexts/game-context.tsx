@@ -42,12 +42,34 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         setGameState((prev) => ({ ...prev, currentScreen: screen }));
     }, []);
 
-    const selectAthlete = useCallback((athleteId: string) => {
-        setGameState((prev) => ({
-            ...prev,
-            selectedAthleteId: athleteId,
-        }));
-    }, []);
+    const getAthlete = useCallback(
+        (athleteId: string) =>
+            GAME_CONFIG.athletes.find((a) => a.id === athleteId),
+        []
+    );
+
+    const getOpponent = useCallback(
+        (opponentId: number) =>
+            GAME_CONFIG.opponents.find((o) => o.id === opponentId),
+        []
+    );
+
+    const selectAthlete = useCallback(
+        (athleteId: string) => {
+            const athlete = getAthlete(athleteId);
+            if (!athlete) {
+                console.error("Athlete not found:", athleteId);
+                return;
+            }
+
+            setGameState((prev) => ({
+                ...prev,
+                selectedAthleteId: athleteId,
+                fixedTalent: athlete.fixedTalent,
+            }));
+        },
+        [getAthlete]
+    );
 
     const selectOpponent = useCallback((opponentId: number) => {
         setGameState((prev) => ({
@@ -69,18 +91,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
             sliderState: INITIAL_GAME_STATE.sliderState,
         }));
     }, []);
-
-    const getAthlete = useCallback(
-        (athleteId: string) =>
-            GAME_CONFIG.athletes.find((a) => a.id === athleteId),
-        []
-    );
-
-    const getOpponent = useCallback(
-        (opponentId: number) =>
-            GAME_CONFIG.opponents.find((o) => o.id === opponentId),
-        []
-    );
 
     const getCurrentAthlete = useCallback(
         () =>
@@ -107,11 +117,17 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
             return;
         }
 
+        if (gameState.fixedTalent === null) {
+            console.error("Cannot fight: fixed talent not set");
+            return;
+        }
+
         const result: FightResult = calculateFight(
             athlete,
             opponent,
             gameState.sliderState,
-            GAME_CONFIG.time_budget
+            GAME_CONFIG.time_budget,
+            gameState.fixedTalent
         );
 
         setGameState((prev) => ({
@@ -126,7 +142,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
                 ? [...new Set([...prev.unlockedOpponents, opponent.id + 1])]
                 : prev.unlockedOpponents,
         }));
-    }, [getCurrentAthlete, getCurrentOpponent, gameState.sliderState]);
+    }, [
+        getCurrentAthlete,
+        getCurrentOpponent,
+        gameState.sliderState,
+        gameState.fixedTalent,
+    ]);
 
     const goToNextOpponent = useCallback(() => {
         const currentId = gameState.currentOpponentId || 1;

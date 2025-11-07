@@ -47,13 +47,13 @@ export function calculateEffectiveWeights(
 }
 
 /**
- * Calculate bias (athlete talent + mood variation)
+ * Calculate bias (fixed athlete talent + mood variation)
+ * @param fixedTalent - The fixed talent value for the athlete (set once when athlete is selected)
+ * @returns The total bias (talent + mood variation)
  */
-export function calculateBias(athlete: Athlete): number {
-    const [minBias, maxBias] = athlete.bias_range;
-    const athleteBaseBias = minBias + Math.random() * (maxBias - minBias);
+export function calculateBias(fixedTalent: number): number {
     const moodVariation = -0.15 + Math.random() * 0.3; // -0.15 to +0.15
-    return athleteBaseBias + moodVariation;
+    return fixedTalent + moodVariation;
 }
 
 /**
@@ -88,7 +88,8 @@ export function calculateFight(
     athlete: Athlete,
     opponent: Opponent,
     sliders: SliderState,
-    timeBudget: number
+    timeBudget: number,
+    fixedTalent: number
 ): FightResult {
     // Enforce time budget
     const enforcedSliders = enforceTimeBudget(sliders, timeBudget);
@@ -99,8 +100,8 @@ export function calculateFight(
         opponent.stats
     );
 
-    // Calculate bias
-    const bias = calculateBias(athlete);
+    // Calculate bias (fixed talent + mood variation)
+    const bias = calculateBias(fixedTalent);
 
     // Calculate score: sum(effective_w[i] * slider[i]) + bias
     let score = bias;
@@ -232,22 +233,15 @@ export function getMoodMessage(bias: number, athleteName: string): string {
 }
 
 /**
- * Calculate average bias for deterministic validation
- * Uses the midpoint of the athlete's bias range
- */
-function calculateAverageBias(athlete: Athlete): number {
-    const [minBias, maxBias] = athlete.bias_range;
-    return (minBias + maxBias) / 2;
-}
-
-/**
  * Calculate fight score with deterministic bias (for validation)
+ * Uses fixed talent without mood variation for consistent validation results
  */
 function calculateFightDeterministic(
     athlete: Athlete,
     opponent: Opponent,
     sliders: SliderState,
-    timeBudget: number
+    timeBudget: number,
+    fixedTalent: number
 ): FightResult {
     // Enforce time budget
     const enforcedSliders = enforceTimeBudget(sliders, timeBudget);
@@ -258,8 +252,8 @@ function calculateFightDeterministic(
         opponent.stats
     );
 
-    // Use average bias for deterministic validation
-    const bias = calculateAverageBias(athlete);
+    // Use fixed talent without mood variation for deterministic validation
+    const bias = fixedTalent;
 
     // Calculate score: sum(effective_w[i] * slider[i]) + bias
     let score = bias;
@@ -279,19 +273,22 @@ function calculateFightDeterministic(
 /**
  * Validate championship weights against all opponents
  * Tests if the current slider configuration (weights) can beat all opponents
+ * Uses fixed talent without mood variation for consistent validation
  */
 export function validateChampionshipWeights(
     athlete: Athlete,
     opponents: Opponent[],
     sliders: SliderState,
-    timeBudget: number
+    timeBudget: number,
+    fixedTalent: number
 ): ChampionshipValidation {
     const results: OpponentValidationResult[] = opponents.map((opponent) => {
         const result = calculateFightDeterministic(
             athlete,
             opponent,
             sliders,
-            timeBudget
+            timeBudget,
+            fixedTalent
         );
         return {
             opponent,
