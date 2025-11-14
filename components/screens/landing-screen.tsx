@@ -40,11 +40,15 @@ export function LandingScreen({ onStart, onStartPart2 }: LandingScreenProps) {
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-2">
                                         <Brain className="h-4 w-4 text-primary" />
-                                        <p className="font-semibold">Part 1: Perceptrons</p>
+                                        <p className="font-semibold">
+                                            Part 1: Perceptrons
+                                        </p>
                                     </div>
                                     <p className="text-sm">
-                                        Learn the basics of neural networks with a single perceptron. 
-                                        Train your fighter and understand how weights and biases work!
+                                        Learn the basics of neural networks with
+                                        a single perceptron. Train your fighter
+                                        and understand how weights and biases
+                                        work!
                                     </p>
                                     <ul className="text-xs space-y-1 list-disc list-inside">
                                         <li>Single training session</li>
@@ -71,16 +75,23 @@ export function LandingScreen({ onStart, onStartPart2 }: LandingScreenProps) {
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-2">
                                         <Network className="h-4 w-4 text-primary" />
-                                        <p className="font-semibold">Part 2: Neural Networks</p>
+                                        <p className="font-semibold">
+                                            Part 2: Neural Networks
+                                        </p>
                                     </div>
                                     <p className="text-sm">
-                                        Level up to multi-layer neural networks! Use 3 training sessions 
-                                        and fight best of 3 against each opponent.
+                                        Level up to multi-layer neural networks!
+                                        Use 3 training sessions and fight best
+                                        of 3 against each opponent.
                                     </p>
                                     <ul className="text-xs space-y-1 list-disc list-inside">
-                                        <li>3 training sessions (hidden layer)</li>
+                                        <li>
+                                            3 training sessions (hidden layer)
+                                        </li>
                                         <li>Best of 3 fights</li>
-                                        <li>Learn neural network architecture</li>
+                                        <li>
+                                            Learn neural network architecture
+                                        </li>
                                     </ul>
                                 </div>
                             </TooltipContent>
@@ -89,7 +100,8 @@ export function LandingScreen({ onStart, onStartPart2 }: LandingScreenProps) {
                 </TooltipProvider>
 
                 <p className="text-sm text-muted-foreground text-center max-w-md">
-                    New to neural networks? Start with Part 1!<br/>
+                    New to neural networks? Start with Part 1!
+                    <br />
                     Already know perceptrons? Jump straight to Part 2!
                 </p>
             </div>
