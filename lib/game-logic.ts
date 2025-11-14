@@ -8,6 +8,8 @@ import {
     AdviceTip,
     OpponentValidationResult,
     ChampionshipValidation,
+    TrainingSession,
+    BestOfThreeResult,
 } from "./game-types";
 
 /**
@@ -294,6 +296,138 @@ export function validateChampionshipWeights(
             opponent,
             result,
             passed: result.won,
+        };
+    });
+
+    const allPassed = results.every((r) => r.passed);
+
+    return {
+        results,
+        allPassed,
+    };
+}
+
+/**
+ * Part 2: Generate mood variation for a training session
+ * Each session has its own independent mood
+ */
+export function generateMoodForSession(fixedTalent: number): number {
+    const moodVariation = -0.15 + Math.random() * 0.3; // -0.15 to +0.15
+    return fixedTalent + moodVariation;
+}
+
+/**
+ * Part 2: Calculate Best of Three fights
+ * Runs 3 independent fights (one per training session) and determines winner
+ * based on output layer logic: wins >= 2
+ */
+export function calculateBestOfThree(
+    athlete: Athlete,
+    opponent: Opponent,
+    sessions: TrainingSession[],
+    timeBudget: number,
+    fixedTalent: number
+): BestOfThreeResult {
+    if (sessions.length !== 3) {
+        throw new Error("Must have exactly 3 training sessions for Best of Three");
+    }
+
+    // Run each fight with its session's sliders and mood
+    const updatedSessions: TrainingSession[] = sessions.map((session) => {
+        const effectiveWeights = calculateEffectiveWeights(
+            athlete.weights,
+            opponent.stats
+        );
+
+        // Enforce time budget for this session
+        const enforcedSliders = enforceTimeBudget(session.sliders, timeBudget);
+
+        // Use the session's pre-generated mood
+        const bias = session.mood;
+
+        // Calculate score
+        let score = bias;
+        for (const stat of TRAINING_STATS) {
+            score += effectiveWeights[stat] * enforcedSliders[stat];
+        }
+
+        const fightResult: FightResult = {
+            score,
+            won: score >= opponent.threshold,
+            bias_used: bias,
+            effective_weights: effectiveWeights,
+            threshold: opponent.threshold,
+        };
+
+        return {
+            ...session,
+            fightResult,
+        };
+    });
+
+    // Count wins
+    const wins = updatedSessions.filter((s) => s.fightResult?.won).length;
+
+    // Output layer: sum of wins (1 for win, 0 for loss)
+    // Weights are all 1, bias is -2, so we need sum >= 2 (i.e., 2+ wins)
+    const outputLayerScore = wins; // sum of 1s and 0s
+
+    return {
+        sessions: updatedSessions,
+        wins,
+        won: outputLayerScore >= 2, // Output layer logic: score >= 2 means win
+        outputLayerScore,
+    };
+}
+
+/**
+ * Part 2: Validate championship weights against all opponents using Best of Three
+ * Tests if the current session configurations can beat all opponents
+ * Uses deterministic moods (fixed talent only) for consistent validation
+ */
+export function validateChampionshipWeightsPart2(
+    athlete: Athlete,
+    opponents: Opponent[],
+    sessions: TrainingSession[],
+    timeBudget: number,
+    fixedTalent: number
+): ChampionshipValidation {
+    // Create deterministic sessions (use fixed talent as mood, no variation)
+    const deterministicSessions: TrainingSession[] = sessions.map((session) => ({
+        ...session,
+        mood: fixedTalent, // No mood variation for deterministic validation
+    }));
+
+    const results: OpponentValidationResult[] = opponents.map((opponent) => {
+        const bestOfThree = calculateBestOfThree(
+            athlete,
+            opponent,
+            deterministicSessions,
+            timeBudget,
+            fixedTalent
+        );
+
+        // For validation purposes, we consider the average score across all 3 fights
+        const avgScore =
+            bestOfThree.sessions.reduce(
+                (sum, s) => sum + (s.fightResult?.score || 0),
+                0
+            ) / 3;
+
+        const validationResult: FightResult = {
+            score: avgScore,
+            won: bestOfThree.won,
+            bias_used: fixedTalent,
+            effective_weights:
+                bestOfThree.sessions[0].fightResult?.effective_weights ||
+                ({} as Record<TrainingStat, number>),
+            threshold: opponent.threshold,
+        };
+
+        return {
+            opponent,
+            result: validationResult,
+            passed: bestOfThree.won,
         };
     });
 

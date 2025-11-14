@@ -48,6 +48,7 @@ interface OpponentPathScreenProps {
     onHowToPlay: () => void;
     onChangeAthlete: () => void;
     onRestart: () => void;
+    gamePart?: 1 | 2; // Track which part we're in
 }
 
 export function OpponentPathScreen({
@@ -59,6 +60,7 @@ export function OpponentPathScreen({
     onHowToPlay,
     onChangeAthlete,
     onRestart,
+    gamePart = 1, // Default to Part 1 for backward compatibility
 }: OpponentPathScreenProps) {
     const allBeaten = opponents.every((opp) =>
         beatenOpponents.includes(opp.id)
@@ -74,10 +76,13 @@ export function OpponentPathScreen({
             <div className="flex flex-col items-center gap-4 max-w-6xl w-full">
                 <div className="text-center">
                     <h2 className="text-4xl font-bold text-foreground mb-2">
-                        Opponent Path
+                        Opponent Path {gamePart === 2 && "- Part 2"}
                     </h2>
                     <p className="text-pop-art-contrast">
-                        Choose your next challenge
+                        {gamePart === 1 
+                            ? "Choose your next challenge"
+                            : "Best of 3 fights - Choose your opponent"
+                        }
                     </p>
                 </div>
 

@@ -16,6 +16,7 @@ interface ChampionshipValidationScreenProps {
     validation: ChampionshipValidation;
     onAdjustTraining: () => void;
     onContinue: () => void;
+    gamePart?: 1 | 2; // Track which part we're validating
 }
 
 export function ChampionshipValidationScreen({
@@ -24,6 +25,7 @@ export function ChampionshipValidationScreen({
     validation,
     onAdjustTraining,
     onContinue,
+    gamePart = 1, // Default to Part 1 for backward compatibility
 }: ChampionshipValidationScreenProps) {
     const [currentTestIndex, setCurrentTestIndex] = useState(0);
     const [isTesting, setIsTesting] = useState(true);
@@ -131,12 +133,26 @@ export function ChampionshipValidationScreen({
                                 <strong className="text-primary">
                                     The Big Idea:
                                 </strong>{" "}
-                                In perceptron training, we need weights that
-                                work for <strong>all</strong> training examples,
-                                not just one! This is called{" "}
-                                <strong>generalization</strong>. Your training
-                                weights must beat every opponent, not just the
-                                last one you faced.
+                                {gamePart === 1 ? (
+                                    <>
+                                        In perceptron training, we need weights that
+                                        work for <strong>all</strong> training examples,
+                                        not just one! This is called{" "}
+                                        <strong>generalization</strong>. Your training
+                                        weights must beat every opponent, not just the
+                                        last one you faced.
+                                    </>
+                                ) : (
+                                    <>
+                                        In neural network training, we need training
+                                        sessions that work for <strong>all</strong>{" "}
+                                        opponents, not just one! This is called{" "}
+                                        <strong>generalization</strong>. Your 3 training
+                                        sessions (hidden layer nodes) must create a
+                                        strategy that wins best of 3 against every
+                                        opponent, not just the last one you faced.
+                                    </>
+                                )}
                             </p>
                         </Card>
 
@@ -160,7 +176,7 @@ export function ChampionshipValidationScreen({
                             }`}
                         >
                             {validation.allPassed ? (
-                                <SuccessSummary onContinue={onContinue} />
+                                <SuccessSummary onContinue={onContinue} gamePart={gamePart} />
                             ) : (
                                 <>
                                     <div className="flex items-center justify-center gap-2 mb-2">
@@ -170,11 +186,23 @@ export function ChampionshipValidationScreen({
                                         </h3>
                                     </div>
                                     <p className="text-lg text-muted-foreground mb-4">
-                                        Your current weights don&apos;t work for
-                                        all opponents. This means they
-                                        aren&apos;t generalizing well. Try
-                                        adjusting your training to find weights
-                                        that work for everyone!
+                                        {gamePart === 1 ? (
+                                            <>
+                                                Your current weights don&apos;t work for
+                                                all opponents. This means they
+                                                aren&apos;t generalizing well. Try
+                                                adjusting your training to find weights
+                                                that work for everyone!
+                                            </>
+                                        ) : (
+                                            <>
+                                                Your current training sessions don&apos;t
+                                                work for all opponents. This means they
+                                                aren&apos;t generalizing well. Try
+                                                adjusting your sessions to find a strategy
+                                                that wins best of 3 against everyone!
+                                            </>
+                                        )}
                                     </p>
                                     <div className="space-y-2">
                                         <p className="text-sm font-semibold text-foreground">
@@ -213,9 +241,10 @@ export function ChampionshipValidationScreen({
 
 interface SuccessSummaryProps {
     onContinue: () => void;
+    gamePart?: 1 | 2;
 }
 
-function SuccessSummary({ onContinue }: SuccessSummaryProps) {
+function SuccessSummary({ onContinue, gamePart = 1 }: SuccessSummaryProps) {
     const [shouldPlayAnimation, setShouldPlayAnimation] = useState(false);
 
     // Delay animation until after card scale animation completes
@@ -255,9 +284,19 @@ function SuccessSummary({ onContinue }: SuccessSummaryProps) {
                 </h3>
             </div>
             <p className="text-lg text-muted-foreground mb-4">
-                Your training weights work for{" "}
-                <strong className="text-foreground">all 6 opponents</strong>.
-                You&apos;ve found weights that generalize!
+                {gamePart === 1 ? (
+                    <>
+                        Your training weights work for{" "}
+                        <strong className="text-foreground">all 6 opponents</strong>.
+                        You&apos;ve found weights that generalize!
+                    </>
+                ) : (
+                    <>
+                        Your training sessions work for{" "}
+                        <strong className="text-foreground">all 6 opponents</strong>.
+                        Your neural network generalizes perfectly!
+                    </>
+                )}
             </p>
             <Button size="lg" onClick={onContinue} className="gap-2">
                 Continue to Learn More →

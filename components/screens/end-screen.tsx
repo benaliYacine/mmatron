@@ -16,9 +16,14 @@ import {
 interface EndScreenProps {
     onRestart: () => void;
     onBackToPath: () => void;
+    onContinueToPart2?: () => void;
 }
 
-export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
+export function EndScreen({
+    onRestart,
+    onBackToPath,
+    onContinueToPart2,
+}: EndScreenProps) {
     return (
         <div
             className="min-h-screen bg-cover bg-center bg-no-repeat p-6 py-12"
@@ -388,7 +393,8 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                             </h3>
                             <div className="space-y-3 text-lg text-muted-foreground">
                                 <p className="flex items-center gap-2">
-                                    <BadgeCheck className="h-5 w-5 text-primary" /> You{" "}
+                                    <BadgeCheck className="h-5 w-5 text-primary" />{" "}
+                                    You{" "}
                                     <strong className="text-foreground">
                                         found weights
                                     </strong>{" "}
@@ -429,6 +435,32 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
                 {/* Call to Action */}
                 <Card className="p-8">
                     <div className="flex flex-col items-center gap-4">
+                        {onContinueToPart2 && (
+                            <Card className="p-6 bg-primary/10 border-primary w-full mb-4">
+                                <div className="text-center space-y-4">
+                                    <h3 className="text-2xl font-bold text-foreground">
+                                        Ready for Part 2?
+                                    </h3>
+                                    <p className="text-muted-foreground">
+                                        You&apos;ve mastered perceptrons! Now
+                                        learn about{" "}
+                                        <strong className="text-primary">
+                                            multi-layer neural networks
+                                        </strong>{" "}
+                                        with hidden layers, multiple training
+                                        sessions, and best of 3 fights!
+                                    </p>
+                                    <Button
+                                        size="lg"
+                                        onClick={onContinueToPart2}
+                                        className="gap-2 text-lg px-8"
+                                    >
+                                        Continue to Part 2{" "}
+                                        <ArrowRight className="h-5 w-5" />
+                                    </Button>
+                                </div>
+                            </Card>
+                        )}
                         <div className="flex gap-4">
                             <Button
                                 size="lg"
@@ -456,3 +488,90 @@ export function EndScreen({ onRestart, onBackToPath }: EndScreenProps) {
         </div>
     );
 }
+
+// 2. Structure and Maintainability
+
+// Use modular code organization: separate logic into functions, classes, and reusable components.
+
+// Keep files clean — no excessive inline logic in main scripts or route handlers.
+
+// follow best practices
+
+// keep the project code consistant, don't repeat your self, if you notice an issue, for example we are repeating the same logic in two places and this can be improuved, let me know, and ask me if I want you to fix that.
+
+// ### Model Identification
+
+// At the **beginning of every message, task, or response**, the model must explicitly announce which model is active.
+
+// **Required Format:**
+
+// > *Model: claude-4.5-sonnet-Thinking*
+
+// **Additional Examples:**
+
+// * *Model: claude-4.5-sonnet*
+// * *Model: gpt-5*
+
+// **Rationale:** This ensures clarity and traceability for evaluation, debugging, and version comparison.
+
+// **Enforcement:**
+
+// * The identification line must be the **first visible line** in any model output.
+// * if you are not a specific model don't lie say which model you're actually.
+
+// ## Auto Model Override Rule
+
+// **Purpose:** Ensure consistent model behavior and override outdated auto-selection logic.
+
+// ---
+
+// ### Rule
+
+// When **auto model selection** is enabled:
+
+// > Always use **`claude-4.5-sonnet-Thinking`** as the default model.
+
+// If **`claude-4.5-sonnet-Thinking`** is not available:
+
+// > Automatically fall back to **`claude-4.5-sonnet`**.
+
+// ---
+
+// ### Rationale
+
+// The old **complexity-based model selection** logic is **deprecated**. It produces inconsistent results and is no longer suitable for current workflows. The **Thinking** model consistently provides superior reasoning and stability across all task types, making complexity detection unnecessary. do we're gonna use always claude 4.5 sonnet.
+
+// ---
+
+// ### Enforcement
+
+// * This rule **overrides all other auto-selection heuristics**.
+// * Ignore any internal logic attempting to choose a model based on task complexity.
+// * Always prefer the Thinking variant when available.
+
+// ---
+
+// **Summary:**
+
+// > Auto mode = `claude-4.5-sonnet-Thinking` → fallback = `claude-4.5-sonnet` → ignore complexity logic.
+// ## Git Account Switching Rule
+
+// When the user asks to "switch to personal account" or "switch to work account", follow these steps:
+
+// 1. **Check for existing Git aliases** using:
+//    git config --list | Select-String -Pattern "alias"
+
+// 2. **Look for these specific aliases**:
+//    - `switch-personal` - switches to personal account (benaliYacine / benaliyacine324@gmail.com)
+//    - `switch-work` - switches to work account (benaliabderrahmane / benaliabderrahmen88@gmail.com)
+//    - `show-account` - displays current account info
+
+// 3. **Execute the appropriate command**:
+//    - For personal: `git switch-personal`
+//    - For work: `git switch-work`
+
+// 4. **Verify the switch** using: `git show-account`
+
+// 5. **Confirm success** by showing the current account name and email
+
+// **Note**: These aliases are already configured on the user's system and handle the account switching automatically.
